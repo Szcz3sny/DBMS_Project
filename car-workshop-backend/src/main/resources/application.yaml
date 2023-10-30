@@ -1,0 +1,15 @@
+ktor:
+  application:
+    modules:
+      - bazydanych.ApplicationKt.publicApi
+  deployment:
+    port: 8080
+jwt:
+  domain: "https://jwt-provider-domain/"
+  audience: "jwt-audience"
+  realm: "ktor sample app"
+
+postgres:
+  url: "jdbc:postgresql://192.168.100.13:5432/workshop"
+  user: "workshop"
+  password: "xxx"
