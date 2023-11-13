@@ -42,6 +42,9 @@ dependencies {
     implementation("org.jooq:jooq:3.18.2")
     implementation("org.jooq:jooq-kotlin:3.18.2")
     implementation("org.jooq:jooq-kotlin-coroutines:3.18.2")
+    implementation("com.password4j:password4j:1.7.0") {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }
