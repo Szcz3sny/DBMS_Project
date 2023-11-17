@@ -29,7 +29,7 @@ class UserService(
             name = form.name,
             surname = form.surname,
             phoneNumber = form.phoneNumber,
-            login = form.login,
+            login = login,
             password = password,
             role = form.role
         )

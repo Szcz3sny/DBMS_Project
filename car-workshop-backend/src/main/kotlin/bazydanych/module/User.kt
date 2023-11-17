@@ -12,25 +12,22 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.Serializable
 
 fun Application.userModule(userService: UserService) {
     routing {
         route("/v1/user") {
             authenticate {
-                put("/create") {
+                put {
                     val userCreateForm = call.receive<UserCreateForm>()
                     val principal: JWTUserPrincipal =
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
 
                     if (principal.user.role == UserRole.ADMIN) {
                         val userAndCredentials = userService.createUser(userCreateForm)
+                        val user = userAndCredentials.first
                         val credentials = userAndCredentials.second
-                        call.respond(
-                            mapOf(
-                                "login" to credentials.first,
-                                "password" to credentials.second
-                            )
-                        )
+                        call.respond(UserCreationResponse(user.id, credentials.first, credentials.second))
                     } else {
                         call.respond(HttpStatusCode.Forbidden)
                     }
@@ -46,8 +43,11 @@ fun Application.userModule(userService: UserService) {
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
 
                     if (principal.user.role == UserRole.ADMIN) {
-                        val newUser = userService.deleteUser(UserId(id))
-                        call.respond(newUser)
+                        if (userService.deleteUser(UserId(id))) {
+                            call.respond(HttpStatusCode.OK)
+                        } else {
+                            call.respond(HttpStatusCode.NotFound)
+                        }
                     } else {
                         call.respond(HttpStatusCode.Forbidden)
                     }
@@ -81,3 +81,6 @@ fun Application.userModule(userService: UserService) {
         }
     }
 }
+
+@Serializable
+class UserCreationResponse(val id: UserId, val login: String, val password: String)

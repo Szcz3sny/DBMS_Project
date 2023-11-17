@@ -7,7 +7,6 @@ import kotlinx.serialization.Serializable
 data class UserCreateForm(
     val name: String,
     val surname: String,
-    val login: String,
     val phoneNumber: String,
     val role: UserRole
 )
