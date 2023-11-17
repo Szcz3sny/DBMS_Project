@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="pl" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wstęp do Warsztatu Samochodowego &mdash; Warsztat samochodowy 1 - dokumentacja</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=e81cd88c"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/translations.js?v=a186e9ce"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Indeks" href="genindex.html" />
+    <link rel="search" title="Szukaj" href="search.html" />
+    <link rel="next" title="Założenia projektu" href="zalozenia_projektowe.html" />
+    <link rel="prev" title="Witamy w dokumentacji projektu Warsztatu samochodowego!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Warsztat samochodowy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Szukaj" aria-label="Szukaj" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Wstęp do Warsztatu Samochodowego</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#funkcjonalnosc">Funkcjonalność</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rejestracja-i-logowanie">Rejestracja i logowanie</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#zarzadzanie-wizytami-i-naprawami">Zarządzanie wizytami i naprawami</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cennik-uslug">Cennik usług</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#zamawianie-czesci-i-zarzadzanie-zamowieniami">Zamawianie części i zarządzanie zamówieniami</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#zdjecia-i-dokumentacja-napraw">Zdjęcia i dokumentacja napraw</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kalendarz">Kalendarz</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#powiazanie-uzytkownika-z-pojazdami">Powiązanie użytkownika z pojazdami</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#obciazenia">Obciążenia</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#kamienie-milowe">Kamienie milowe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ramy-czasowe">Ramy czasowe</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="zalozenia_projektowe.html">Założenia projektu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_struktura_danych.html">Model i struktura danych</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Warsztat samochodowy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Wstęp do Warsztatu Samochodowego</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/wstep.rst.txt" rel="nofollow"> Zobacz źródło strony</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="wstep-do-warsztatu-samochodowego">
+<h1>Wstęp do Warsztatu Samochodowego<a class="headerlink" href="#wstep-do-warsztatu-samochodowego" title="Link to this heading"></a></h1>
+<p>Niniejsza dokumentacja przedstawia projekt strony internetowej dla warsztatu samochodowego, która ma na celu umożliwienie zarówno klientom, jak i pracownikom korzystanie z różnorodnych funkcjonalności związanych z usługami serwisowymi. Strona ma ułatwić zarządzanie terminami wizyt, kosztami napraw, dostępem do cennika usług oraz zamówieniami i sprawdzaniem stanu części.</p>
+<a class="reference internal image-reference" href="_images/warsztat.jpg"><img alt="warsztat samochodowy" class="align-center" src="_images/warsztat.jpg" style="width: 1000px;" /></a>
+<section id="funkcjonalnosc">
+<h2>Funkcjonalność<a class="headerlink" href="#funkcjonalnosc" title="Link to this heading"></a></h2>
+<section id="rejestracja-i-logowanie">
+<h3>Rejestracja i logowanie<a class="headerlink" href="#rejestracja-i-logowanie" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Klienci mogą się rejestrować i logować, uzyskując dostęp do personalizowanych usług.</p></li>
+<li><p>Pracownicy również posiadają osobne konto, które umożliwia im dostęp do bardziej zaawansowanych funkcji, takich jak zarządzanie zamówieniami części i harmonogramem napraw.</p></li>
+</ul>
+</section>
+<section id="zarzadzanie-wizytami-i-naprawami">
+<h3>Zarządzanie wizytami i naprawami<a class="headerlink" href="#zarzadzanie-wizytami-i-naprawami" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Klienci mogą umawiać się na wizyty, sprawdzać stan naprawy oraz otrzymywać koszty napraw.</p></li>
+<li><p>Pracownicy mogą przeglądać i zarządzać harmonogramem wizyt oraz aktualnymi naprawami.</p></li>
+</ul>
+</section>
+<section id="cennik-uslug">
+<h3>Cennik usług<a class="headerlink" href="#cennik-uslug" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Strona udostępnia klientom cennik usług warsztatu samochodowego, co umożliwia im łatwe porównywanie cen i usług.</p></li>
+</ul>
+</section>
+<section id="zamawianie-czesci-i-zarzadzanie-zamowieniami">
+<h3>Zamawianie części i zarządzanie zamówieniami<a class="headerlink" href="#zamawianie-czesci-i-zarzadzanie-zamowieniami" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Pracownicy mają możliwość zamawiania części, sprawdzania ich dostępności oraz cen, a także zarządzania listą zamówień.</p></li>
+</ul>
+</section>
+<section id="zdjecia-i-dokumentacja-napraw">
+<h3>Zdjęcia i dokumentacja napraw<a class="headerlink" href="#zdjecia-i-dokumentacja-napraw" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Strona przechowuje zdjęcia napraw, zdjęcia samochodów oraz zdjęcia części dla celów dokumentacyjnych i wizualizacyjnych.</p></li>
+</ul>
+</section>
+<section id="kalendarz">
+<h3>Kalendarz<a class="headerlink" href="#kalendarz" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Użytkownicy mają dostęp do kalendarza, który umożliwia zarządzanie wizytami i planowaniem napraw.</p></li>
+</ul>
+</section>
+<section id="powiazanie-uzytkownika-z-pojazdami">
+<h3>Powiązanie użytkownika z pojazdami<a class="headerlink" href="#powiazanie-uzytkownika-z-pojazdami" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Klienci mogą powiązać swoje konta z odpowiednimi pojazdami, co ułatwia śledzenie historii napraw i innych działań serwisowych.</p></li>
+</ul>
+</section>
+<section id="obciazenia">
+<h3>Obciążenia<a class="headerlink" href="#obciazenia" title="Link to this heading"></a></h3>
+<p>Projekt będzie wymagał solidnego systemu zarządzania bazą danych, który będzie przechowywał informacje o klientach, ich pojazdach, historii napraw oraz dostępności części. Strona internetowa musi obsługiwać zarówno konta klientów, jak i konta pracowników, co wymaga bezpiecznej i niezawodnej infrastruktury zapewniającej prywatność danych użytkowników.</p>
+</section>
+</section>
+<section id="kamienie-milowe">
+<h2>Kamienie milowe<a class="headerlink" href="#kamienie-milowe" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Stworzenie bazy danych i zaprojektowanie jej struktury.</p></li>
+<li><p>Implementacja systemu logowania dla klientów i pracowników.</p></li>
+<li><p>Opracowanie interfejsu użytkownika umożliwiającego zarządzanie wizytami i naprawami.</p></li>
+<li><p>Umożliwienie zamawiania części przez pracowników i powiązanie ich z konkretnymi naprawami.</p></li>
+<li><p>Opracowanie modułu przechowywania zdjęć i dokumentacji serwisowej.</p></li>
+<li><p>Implementacja kalendarza i powiązanie go z systemem zarządzania wizytami.</p></li>
+</ol>
+</section>
+<section id="ramy-czasowe">
+<h2>Ramy czasowe<a class="headerlink" href="#ramy-czasowe" title="Link to this heading"></a></h2>
+<p>Projekt zostanie zrealizowany w ciągu 4 miesięcy, z uwzględnieniem przeglądów postępów co 2 lub 4 tygodnie. Kamienie milowe będą dokładnie omawiane i realizowane w trakcie tych spotkań i ocen postępów. Pierwszy miesiąc zostanie przeznaczony na stworzenie projektu bazy danych oraz wybór odpowiedniej technologii. W drugim miesiącu planowane jest skoncentrowanie się na stworzeniu bazy danych, implementacji funkcjonalności oraz warstwy wizualnej strony internetowej. Następnie będzie kontynuowane uzupełnianie bazy danych, stworzenie systemu logowania oraz połączenie front-endu z back-endem, na co przeznaczone zostaną trzy tygodnie. Planowane jest przeznaczenie 5 tygodni na testy i debugowanie, a kolejne 3 tygodnie na optymalizację. Ostatni tydzień będzie poświęcony na stworzenie prezentacji końcowej oraz dopracowanie dokumentacji.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Witamy w dokumentacji projektu Warsztatu samochodowego!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Poprzedni</a>
+        <a href="zalozenia_projektowe.html" class="btn btn-neutral float-right" title="Założenia projektu" accesskey="n" rel="next">Następny <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Prawa zastrzeżone 2023, Szczesny, Pawelski, Melnyk, Flisak, Gora.</p>
+  </div>
+
+  Zbudowano w <a href="https://www.sphinx-doc.org/">Sphinx</a> używając
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    dostarczone przez <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
