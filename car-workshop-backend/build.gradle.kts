@@ -39,6 +39,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-config-yaml:2.3.5")
     implementation("com.zaxxer:HikariCP:$hikaricp_version")
+    implementation("io.ktor:ktor-client-jackson:$ktor_version")
     implementation("org.jooq:jooq:3.18.2")
     implementation("org.jooq:jooq-kotlin:3.18.2")
     implementation("org.jooq:jooq-kotlin-coroutines:3.18.2")
