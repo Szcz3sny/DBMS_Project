@@ -58,10 +58,10 @@ fun Application.priceModule(priceService: PriceService) {
                     }
                 }
 
-                put("/{id}") {
+                patch("/{id}") {
                     val id = call.parameters["id"]?.toIntOrNull() ?: run {
                         call.respond(HttpStatusCode.BadRequest)
-                        return@put
+                        return@patch
                     }
 
                     val principal: JWTUserPrincipal =
