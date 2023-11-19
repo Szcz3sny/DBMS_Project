@@ -16,6 +16,9 @@ class PriceService(
         return PriceView.fromPrice(price)}
 
     suspend fun createPrice(form: PriceCreateForm): Price {
+        if (form.price.signum() == -1) {
+            throw IllegalArgumentException("Price cannot be negative")
+        }
 
         val details = PriceCreateDetails(
             name = form.name,
