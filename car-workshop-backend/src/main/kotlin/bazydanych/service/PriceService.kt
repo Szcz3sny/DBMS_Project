@@ -29,7 +29,7 @@ class PriceService(
             id = id,
             name = details.name,
             description = details.description,
-            price = details.price.toString()
+            price = details.price,
         )
     }
 

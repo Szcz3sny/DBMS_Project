@@ -1,6 +1,6 @@
 package bazydanych.service.form
 
-import kotlinx.serialization.Contextual
+import bazydanych.util.BigDecimalSerializer
 import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 
@@ -8,5 +8,6 @@ import java.math.BigDecimal
 data class PriceCreateForm(
     val name: String,
     val description: String,
-    val price: String,
+    @Serializable(with = BigDecimalSerializer::class)
+    val price: BigDecimal,
 )

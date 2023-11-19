@@ -10,6 +10,8 @@ import kotlinx.coroutines.withContext
 import org.jooq.DSLContext
 import org.jooq.Record
 import bazydanych.repository.table.PricesTable
+import bazydanych.util.BigDecimalSerializer
+import java.math.BigDecimal
 
 class PostgresPriceRepository(private val jooq: DSLContext) : PriceRepository {
 
@@ -27,7 +29,7 @@ class PostgresPriceRepository(private val jooq: DSLContext) : PriceRepository {
             .values(
                 details.name,
                 details.description,
-                details.price.toBigDecimal()
+                details.price,
             )
             .returning(PricesTable.ID)
             .fetchOne() != null
@@ -38,7 +40,7 @@ class PostgresPriceRepository(private val jooq: DSLContext) : PriceRepository {
             val updatedRecord = jooq.update(PricesTable.TABLE)
                 .set(PricesTable.NAME, details.name)
                 .set(PricesTable.DESCRIPTION, details.description)
-                .set(PricesTable.PRICE, details.price.toBigDecimal())
+                .set(PricesTable.PRICE, details.price)
                 .where(PricesTable.ID.eq(id.value))
                 .returning()
                 .fetchOne()
@@ -60,7 +62,7 @@ class PostgresPriceRepository(private val jooq: DSLContext) : PriceRepository {
             id = PriceId(it.getValue(PricesTable.ID)),
             name = it.getValue(PricesTable.NAME),
             description = it.getValue(PricesTable.DESCRIPTION),
-            price = it.getValue(PricesTable.PRICE, String::class.java).toBigDecimal().toPlainString()
+            price = it.getValue(PricesTable.PRICE)
         )
     }
 
@@ -72,7 +74,8 @@ class PostgresPriceRepository(private val jooq: DSLContext) : PriceRepository {
         val id: PriceId,
         val name: String,
         val description: String,
-        val price: String
+        @Serializable(with = BigDecimalSerializer::class)
+        val price: BigDecimal
     ) {
         companion object {
             fun fromPrice(price: Price) = PriceView(

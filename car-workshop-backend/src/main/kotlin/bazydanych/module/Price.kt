@@ -5,14 +5,15 @@ import bazydanych.model.user.UserRole
 import bazydanych.plugins.JWTUserPrincipal
 import bazydanych.service.PriceService
 import bazydanych.service.form.PriceCreateForm
+import bazydanych.util.BigDecimalSerializer
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import java.math.BigDecimal
 
 fun Application.priceModule(priceService: PriceService) {
     routing {
@@ -102,6 +103,6 @@ data class PriceCreationResponse(
     val id: PriceId,
     val name: String,
     val description: String,
-    @Contextual
-    val price: String
+    @Serializable(with = BigDecimalSerializer::class)
+    val price: BigDecimal
 )

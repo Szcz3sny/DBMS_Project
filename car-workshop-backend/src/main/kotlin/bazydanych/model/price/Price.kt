@@ -1,6 +1,7 @@
 package bazydanych.model.price
 
 import bazydanych.model.Id
+import bazydanych.util.BigDecimalSerializer
 import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 
@@ -11,6 +12,7 @@ data class Price(
     val id: PriceId,
     val name: String,
     val description: String,
-    val price: String
+    @Serializable(with = BigDecimalSerializer::class)
+    val price: BigDecimal
 )
 
