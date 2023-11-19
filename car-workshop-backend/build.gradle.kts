@@ -40,8 +40,6 @@ dependencies {
     implementation("io.ktor:ktor-server-config-yaml:2.3.5")
     implementation("com.zaxxer:HikariCP:$hikaricp_version")
     implementation("io.ktor:ktor-client-jackson:$ktor_version")
-    implementation("io.ktor:ktor-jackson:1.6.5")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
     implementation("org.jooq:jooq:3.18.2")
     implementation("org.jooq:jooq-kotlin:3.18.2")
     implementation("org.jooq:jooq-kotlin-coroutines:3.18.2")
