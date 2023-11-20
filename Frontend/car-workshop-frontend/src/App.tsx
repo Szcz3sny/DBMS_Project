@@ -15,14 +15,12 @@ function App() {
           className="w-full bg-no-repeat bg-cover bg-center"
           style={{
             backgroundImage: `url(${warsztatImage})`,
-            minHeight: "100vh", // This will make sure that the image covers the full viewport height at least.
+            minHeight: "100vh",
           }}
           aria-label="Warsztat"
         >
-          {/* Spacer div to create some space between the navbar and the content box */}
           <div className="h-16 md:h-24"></div>
 
-          {/* Semi-transparent container */}
           <div className="mx-auto max-w-screen-lg bg-black bg-opacity-80 text-white p-4 md:p-8 text-center">
             <h2 className="text-3xl font-semibold">O nas</h2>
             <p className="mt-4">

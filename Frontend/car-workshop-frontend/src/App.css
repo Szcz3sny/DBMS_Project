@@ -1,12 +1,1 @@
-/* Add this to your App.css file */
-@media (max-width: 768px) {
-  .custom-background {
-    background-position: center 20%; /* Adjust the vertical position as needed */
-  }
-}
 
-@media (max-width: 480px) {
-  .custom-background {
-    background-position: center 10%; /* Further adjust the position for smaller screens */
-  }
-}
