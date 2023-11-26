@@ -20,6 +20,7 @@ function App() {
     setIsLoggedIn(false);
     setUsername("");
   };
+
   return (
     <>
       <BrowserRouter>

@@ -72,7 +72,7 @@ export function UserNav({
               </Avatar>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="bg-black">
+            <DropdownMenuContent className="bg-black py-2 px-4 bg-red-800 text-white rounded hover:bg-red-600 transition-colors duration-150 border border-red-600 hover:border-red-700 shadow">
               <DropdownMenuItem>
                 {username ? username : "Nieznany użytkownik"}
               </DropdownMenuItem>
@@ -120,7 +120,7 @@ export function UserNav({
               </Avatar>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="bg-black">
+            <DropdownMenuContent className="bg-black py-2 px-4 bg-red-800 text-white rounded hover:bg-red-600 transition-colors duration-150 border border-red-600 hover:border-red-700 shadow">
               <DropdownMenuItem>
                 {username ? username : "Nieznany użytkownik"}
               </DropdownMenuItem>

@@ -1,11 +1,9 @@
-import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 import {
@@ -82,8 +80,8 @@ export function MainNav() {
                 <div className="w-6 h-0.5 bg-white"></div>
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-black">
-              <DropdownMenuItem>
+            <DropdownMenuContent className="bg-black rounded border-b border-black ">
+              <DropdownMenuItem className="hover:bg-red-700">
                 <Link to="">Strona Główna</Link>
               </DropdownMenuItem>
               <DropdownMenuItem>

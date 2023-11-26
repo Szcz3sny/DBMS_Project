@@ -1,4 +1,3 @@
-import React from "react";
 import warsztatImage from "./img/warsztatTło.png";
 
 const HomePage = () => {
