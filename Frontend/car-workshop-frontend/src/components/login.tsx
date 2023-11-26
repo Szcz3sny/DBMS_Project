@@ -17,7 +17,11 @@ type FormData = {
   password: string;
 };
 
-const Login = () => {
+interface LoginProps {
+  onLoginSuccess: (username: string) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const {
     register,
     handleSubmit,
@@ -38,6 +42,7 @@ const Login = () => {
 
       setLoginError("");
       reset();
+      onLoginSuccess(data.username);
       console.log(response.data);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

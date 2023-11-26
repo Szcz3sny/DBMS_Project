@@ -1,5 +1,3 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,15 +11,17 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { Button } from "@/components/ui/button";
 
-export function MainNav() {
-  const navigate = useNavigate();
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-  const handleLoginClick = () => {
-    navigate("/login");
-  };
-
+import { Link } from "react-router-dom";
+interface UserNavProps {
+  username?: string;
+}
+export function UserNav({
+  username,
+  onLogout,
+}: UserNavProps & { onLogout: () => void }) {
   return (
     <div className="bg-black">
       <div className="hidden md:block">
@@ -64,12 +64,27 @@ export function MainNav() {
               </NavigationMenuList>
             </NavigationMenu>
           </div>
-          <Button
-            onClick={handleLoginClick}
-            className="py-2 px-4 bg-red-800 text-white rounded hover:bg-red-600 transition-colors duration-150 border border-red-600 hover:border-red-700 shadow md:ml-4"
-          >
-            Logowanie
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar className="cursor-pointer">
+                <AvatarImage src="" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent className="bg-black">
+              <DropdownMenuItem>
+                {username ? username : "Nieznany użytkownik"}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link to="">Kalendarz spotkań</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onLogout}>
+                <Link to="">Wyloguj</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
       <div className="block md:hidden">
@@ -97,12 +112,27 @@ export function MainNav() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button
-            onClick={handleLoginClick}
-            className="py-2 px-4 bg-red-800 text-white rounded hover:bg-red-600 transition-colors duration-150 border border-red-600 hover:border-red-700 shadow md:ml-4"
-          >
-            Logowanie
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar className="cursor-pointer">
+                <AvatarImage src="" alt="Profil użytkownika" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent className="bg-black">
+              <DropdownMenuItem>
+                {username ? username : "Nieznany użytkownik"}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link to="">Kalendarz spotkań</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onLogout}>
+                <Link to="">Wyloguj</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>
