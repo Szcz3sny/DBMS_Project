@@ -70,6 +70,13 @@ fun Application.userModule(userService: UserService) {
                         } ?: call.respond(HttpStatusCode.NotFound)
                     }
                 }
+
+                get("/me") {
+                    val principal: JWTUserPrincipal =
+                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
+
+                    call.respond(UserService.UserView.fromUser(principal.user))
+                }
             }
 
             post("/login") {
