@@ -5,6 +5,7 @@ import { NavBar } from "@/components/nav-bar";
 import { Footer } from "@/components/footer";
 import HomePage from "@/components/home-page";
 import Login from "@/components/login";
+import  Contact  from "@/components/contactAndLocation";
 import { useState } from "react";
 
 function App() {
@@ -35,6 +36,10 @@ function App() {
             <Route
               path="/login"
               element={<Login onLoginSuccess={handleLoginSuccess} />}
+            />
+            <Route
+              path="/contactAndLocation" 
+              element={<Contact />} 
             />
           </Routes>
           <Footer />

@@ -53,7 +53,7 @@ export function MainNav() {
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link
-                    to=""
+                    to="/contactAndLocation"
                     className="block hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Kontakt i lokalizacja
