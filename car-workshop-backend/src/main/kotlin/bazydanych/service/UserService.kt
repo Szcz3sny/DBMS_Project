@@ -7,7 +7,6 @@ import bazydanych.repository.UserRepository
 import bazydanych.service.form.UserCreateForm
 import bazydanych.service.form.UserLoginForm
 import com.password4j.Password
-import kotlinx.serialization.Serializable
 import java.time.Duration
 import java.util.UUID.randomUUID
 import kotlin.random.Random
@@ -17,8 +16,8 @@ class UserService(
     private val jwtGenerator: JwtGenerator
 ) {
 
-    suspend fun findUserById(id: UserId): UserView? {
-        return userRepository.findUserById(id)?.let { user -> UserView.fromUser(user) }
+    suspend fun findUserById(id: UserId): User? {
+        return userRepository.findUserById(id)
     }
 
     suspend fun createUser(form: UserCreateForm): Pair<User, Pair<String, String>> {
@@ -74,24 +73,5 @@ class UserService(
                     role = UserRole.ADMIN
                 )
             )
-    }
-
-    @Serializable
-    data class UserView(
-        val id: UserId,
-        val name: String,
-        val surname: String,
-        val phoneNumber: String,
-        val role: UserRole,
-    ) {
-        companion object {
-            fun fromUser(user: User) = UserView(
-                id = user.id,
-                name = user.name,
-                surname = user.surname,
-                phoneNumber = user.phoneNumber,
-                role = user.role,
-            )
-        }
     }
 }

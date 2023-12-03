@@ -3,9 +3,9 @@ package bazydanych.service
 import bazydanych.model.price.Price
 import bazydanych.model.price.PriceId
 import bazydanych.repository.PriceRepository
+import bazydanych.service.dto.PriceView
+import bazydanych.service.dto.toDto
 import bazydanych.service.form.PriceCreateForm
-import kotlinx.serialization.Serializable
-
 
 class PriceService(
     private val priceRepository: PriceRepository,
@@ -13,7 +13,8 @@ class PriceService(
 
     suspend fun findPriceById(id: PriceId): PriceView? {
         val price = priceRepository.findPriceById(id) ?: return null
-        return PriceView.fromPrice(price)}
+        return price.toDto()
+    }
 
     suspend fun createPrice(form: PriceCreateForm): Price {
         if (form.price.signum() == -1) {
@@ -48,30 +49,7 @@ class PriceService(
     }
 
 
-
     suspend fun deletePrice(id: PriceId): Boolean {
         return priceRepository.deletePrice(id)
     }
-
-    @Serializable
-    data class PriceView(
-        val id: PriceId,
-        val name: String,
-        val description: String,
-        val price: String
-    ) {
-        companion object {
-            fun fromPrice(price: Price): PriceView {
-                return PriceView(
-                    id = price.id,
-                    name = price.name,
-                    description = price.description,
-                    price = price.price.toString()
-                )
-            }
-        }
-    }
-
-
-
 }

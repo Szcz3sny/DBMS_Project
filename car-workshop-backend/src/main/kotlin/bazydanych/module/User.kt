@@ -4,6 +4,7 @@ import bazydanych.model.user.UserId
 import bazydanych.model.user.UserRole
 import bazydanych.plugins.JWTUserPrincipal
 import bazydanych.service.UserService
+import bazydanych.service.dto.toDto
 import bazydanych.service.form.UserCreateForm
 import bazydanych.service.form.UserLoginForm
 import io.ktor.http.*
@@ -18,7 +19,7 @@ fun Application.userModule(userService: UserService) {
     routing {
         route("/v1/user") {
             authenticate {
-                put {
+                post {
                     val userCreateForm = call.receive<UserCreateForm>()
                     val principal: JWTUserPrincipal =
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
@@ -65,8 +66,8 @@ fun Application.userModule(userService: UserService) {
                     if (principal.user.role == UserRole.GUEST) {
                         call.respond(HttpStatusCode.Forbidden)
                     } else {
-                        userService.findUserById(UserId(id))?.let { userView ->
-                            call.respond(userView)
+                        userService.findUserById(UserId(id))?.let { user ->
+                            call.respond(user.toDto())
                         } ?: call.respond(HttpStatusCode.NotFound)
                     }
                 }
@@ -75,7 +76,7 @@ fun Application.userModule(userService: UserService) {
                     val principal: JWTUserPrincipal =
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
 
-                    call.respond(UserService.UserView.fromUser(principal.user))
+                    call.respond(principal.user.toDto())
                 }
             }
 
