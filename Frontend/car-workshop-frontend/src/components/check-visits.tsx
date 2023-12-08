@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import warsztatImage from "./img/warsztatTło.png";
 
-//Na razie suche dane
+//Na razie suche dane bo nie mamy jeszcze zrobionego
 const visitsData = [
   { date: "2023-12-28", description: "Zmiana oleju", price: "100.00" },
   { date: "2024-01-15", description: "Sprawdzenie hamulców", price: "250.00" },
@@ -55,28 +55,6 @@ const CheckVisits = () => {
             ))}
           </TableBody>
         </Table>
-
-        {/* <div className="bg-black text-white">
-          <Table>
-            <TableCaption>Lista wizyt</TableCaption>
-            <TableHead>
-              <TableRow>
-                <TableHead className="w-[1200px]">Termin</TableHead>
-                <TableHead className="w-[100px]">Opis</TableHead>
-                <TableHead>Cena</TableHead>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {visitsData.map((visit, index) => (
-                <TableRow key={index}>
-                  <TableCell>{visit.date}</TableCell>
-                  <TableCell>{visit.description}</TableCell>
-                  <TableCell>{visit.price} zł</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div> */}
       </div>
     </div>
   );

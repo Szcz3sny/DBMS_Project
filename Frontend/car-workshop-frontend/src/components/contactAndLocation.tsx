@@ -1,10 +1,9 @@
-// components/KontaktLokalizacja.tsx
 import warsztatImage from "./img/warsztatTło.png";
 
 const ContactLocation = () => {
   return (
     <div
-      className="flex flex-col items-center justify-center p-8 rounded-lg"
+      className="flex flex-col items-center justify-center p-8"
       style={{
         backgroundImage: `url(${warsztatImage})`,
         minHeight: "100vh",
