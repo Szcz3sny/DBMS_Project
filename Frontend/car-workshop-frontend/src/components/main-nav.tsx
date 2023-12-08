@@ -30,7 +30,7 @@ export function MainNav() {
                 <NavigationMenuItem>
                   <Link
                     to=""
-                    className="block hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
+                    className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Strona Główna
                   </Link>
@@ -38,7 +38,7 @@ export function MainNav() {
                 <NavigationMenuItem>
                   <Link
                     to=""
-                    className="block hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
+                    className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Oferta
                   </Link>
@@ -46,7 +46,7 @@ export function MainNav() {
                 <NavigationMenuItem>
                   <Link
                     to=""
-                    className="block hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
+                    className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Dostępne części
                   </Link>
@@ -54,7 +54,7 @@ export function MainNav() {
                 <NavigationMenuItem>
                   <Link
                     to="/contactAndLocation"
-                    className="block hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
+                    className="block  text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Kontakt i lokalizacja
                   </Link>
@@ -82,16 +82,24 @@ export function MainNav() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="bg-black rounded border-b border-black ">
               <DropdownMenuItem className="hover:bg-red-700">
-                <Link to="">Strona Główna</Link>
+                <Link to="" className="text-white">
+                  Strona Główna
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to="">Oferta</Link>
+                <Link to="" className="text-white">
+                  Oferta
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to="">Dostępne części</Link>
+                <Link to="" className="text-white">
+                  Dostępne części
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to="">Kontakt i lokalizacja</Link>
+                <Link to="" className="text-white">
+                  Kontakt i lokalizacja
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

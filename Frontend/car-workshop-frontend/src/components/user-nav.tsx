@@ -32,7 +32,7 @@ export function UserNav({
                 <NavigationMenuItem>
                   <Link
                     to=""
-                    className="block hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
+                    className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Strona Główna
                   </Link>
@@ -40,7 +40,7 @@ export function UserNav({
                 <NavigationMenuItem>
                   <Link
                     to=""
-                    className="block hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
+                    className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Oferta
                   </Link>
@@ -48,7 +48,7 @@ export function UserNav({
                 <NavigationMenuItem>
                   <Link
                     to=""
-                    className="block hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
+                    className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Dostępne części
                   </Link>
@@ -56,7 +56,7 @@ export function UserNav({
                 <NavigationMenuItem>
                   <Link
                     to="/contactAndLocation"
-                    className="block hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
+                    className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Kontakt i lokalizacja
                   </Link>
@@ -72,13 +72,19 @@ export function UserNav({
               </Avatar>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="bg-black py-2 px-4 bg-red-800 text-white rounded hover:bg-red-600 transition-colors duration-150 border border-red-600 hover:border-red-700 shadow">
-              <DropdownMenuItem>
+            <DropdownMenuContent className="bg-black text-white rounded border-b border-black">
+              <DropdownMenuItem className="hover:bg-black">
                 {username ? username : "Nieznany użytkownik"}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link to="">Kalendarz spotkań</Link>
+                <Link to="">Umów wizytę</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to="/check-visits">Sprawdź wizty</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to="">Sprawdź historię wizyty</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={onLogout}>
                 <Link to="">Wyloguj</Link>
@@ -97,18 +103,26 @@ export function UserNav({
                 <div className="w-6 h-0.5 bg-white"></div>
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-black">
-              <DropdownMenuItem>
-                <Link to="">Strona Główna</Link>
+            <DropdownMenuContent className="bg-black rounded border-b border-black ">
+              <DropdownMenuItem className="hover:bg-red-700">
+                <Link to="" className="text-white">
+                  Strona Główna
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to="">Oferta</Link>
+                <Link to="" className="text-white">
+                  Oferta
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to="">Dostępne części</Link>
+                <Link to="" className="text-white">
+                  Dostępne części
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to="">Kontakt i lokalizacja</Link>
+                <Link to="/contactAndLocation" className="text-white">
+                  Kontakt i lokalizacja
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -120,13 +134,19 @@ export function UserNav({
               </Avatar>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="bg-black py-2 px-4 bg-red-800 text-white rounded hover:bg-red-600 transition-colors duration-150 border border-red-600 hover:border-red-700 shadow">
-              <DropdownMenuItem>
+            <DropdownMenuContent className="bg-black text-white rounded border-b border-black">
+              <DropdownMenuItem className="hover:bg-200">
                 {username ? username : "Nieznany użytkownik"}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link to="">Kalendarz spotkań</Link>
+                <Link to="">Umów wizytę</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to="/check-visits">Sprawdź wizyty</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to="">Sprawdź historię wizyt</Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={onLogout}>
                 <Link to="">Wyloguj</Link>

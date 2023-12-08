@@ -19,16 +19,15 @@ const ContactLocation = () => {
             Kontakt
           </span>
         </h2>
-        <p>
-          <span className="bg-black bg-opacity-70 px-2 py-1 rounded-md">
+        <p className="mb-2">
+          <span className="bg-black bg-opacity-70 px-2 py-1 rounded-md ">
             Telefon: (123) 456-7890
           </span>{" "}
         </p>
         <p>
-          <span className="bg-black bg-opacity-50 px-2 py-1 rounded-md">
+          <span className="bg-black bg-opacity-70 px-2 py-1 rounded-md ">
             Email: kontakt@motoserwis.pl
           </span>{" "}
-
         </p>
 
         <div className="mt-8">

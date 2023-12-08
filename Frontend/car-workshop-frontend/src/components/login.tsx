@@ -11,6 +11,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { useNavigate } from "react-router-dom";
 
 type FormData = {
   username: string;
@@ -22,13 +23,9 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormData>();
+  const { register, handleSubmit, reset } = useForm<FormData>();
   const [loginError, setLoginError] = useState("");
+  const navigate = useNavigate();
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const response = await axios.post(
@@ -44,6 +41,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       reset();
       onLoginSuccess(data.username);
       console.log(response.data);
+      navigate("/");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         setLoginError("Błędny login lub hasło");
@@ -64,10 +62,10 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         backgroundPosition: "center", // Dodane
       }}
     >
-      <Card style={{ maxWidth: "400px" }}>
+      <Card style={{ maxWidth: "400px" }} className="bg-black">
         <CardHeader>
-          <CardTitle>Logowanie</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-white">Logowanie</CardTitle>
+          <CardDescription className="text-white">
             Wprowadź swoje dane logowania poniżej.
           </CardDescription>
         </CardHeader>
@@ -79,29 +77,32 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
               </div>
             )}
             <div className="space-y-1">
-              <Label htmlFor="username">Nazwa użytkownika</Label>
+              <Label htmlFor="username" className="text-white">
+                Nazwa użytkownika
+              </Label>
               <input
                 id="username"
                 {...register("username", { required: true })}
                 className="w-full p-2 rounded border-2 border-gray-300 text-black"
               />
-              {errors.username && (
-                <span style={{ color: "white" }}>To pole jest wymagane</span>
-              )}
             </div>
             <div className="space-y-1">
-              <Label htmlFor="password">Hasło</Label>
+              <Label htmlFor="password" className="text-white">
+                Hasło
+              </Label>
               <input
                 id="password"
                 type="password"
                 {...register("password", { required: true })}
                 className="w-full p-2 rounded border-2 border-gray-300 text-black"
               />
-              {errors.password && (
-                <span style={{ color: "white" }}>To pole jest wymagane</span>
-              )}
             </div>
-            <Button type="submit">Zaloguj się</Button>
+            <Button
+              type="submit"
+              className="bg-red-800 text-white rounded hover:bg-red-600 transition-colors duration-150 border border-red-600 hover:border-red-700 "
+            >
+              Zaloguj się
+            </Button>
           </form>
         </CardContent>
       </Card>
