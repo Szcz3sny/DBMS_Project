@@ -7,8 +7,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import warsztatImage from "./img/warsztatTło.png";
 
+//import warsztatImage from "./img/warsztatTło.png";
 //Na razie suche dane bo nie mamy jeszcze zrobionego
 const visitsData = [
   { date: "2023-12-28", description: "Zmiana oleju", price: "100.00" },

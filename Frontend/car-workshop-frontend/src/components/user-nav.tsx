@@ -69,39 +69,23 @@ export function UserNav({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar className="cursor-pointer">
-                <AvatarImage src="" alt="Profil użytkownika"/>
+                <AvatarImage src="" alt="Profil użytkownika" />
                 <AvatarFallback>{username ? username[0] : "U"}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
 
-<<<<<<< HEAD
-            <DropdownMenuContent className="bg-black text-white rounded border-b border-black">
-              <DropdownMenuItem className="hover:bg-black">
-                {username ? username : "Nieznany użytkownik"}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link to="">Umów wizytę</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link to="/check-visits">Sprawdź wizty</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link to="">Sprawdź historię wizyty</Link>
-              </DropdownMenuItem>
-=======
             <DropdownMenuContent className="bg-black py-2 px-4 bg-red-800 text-white rounded hover:bg-red-600 transition-colors duration-150 border border-red-600 hover:border-red-700 shadow">
               <DropdownMenuItem>
-                <Link to="/dashboard">{username ? username : "Panel użytkownika"}</Link>
+                <Link to="/dashboard">
+                  {username ? username : "Panel użytkownika"}
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
->>>>>>> 943ac0c (Panel uzytkownika, poprawa formularza logowania, zmiana wygladu formularza, dodanie podstron)
               <DropdownMenuItem onClick={onLogout}>
                 <Link to="">Wyloguj</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          
         </div>
       </div>
       <div className="block md:hidden">
