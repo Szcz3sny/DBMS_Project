@@ -57,26 +57,26 @@ const CheckVisits = () => {
         </Table>
 
         {/* <div className="bg-black text-white">
-        <Table>
-          <TableCaption>Lista wizyt</TableCaption>
-          <TableHead>
-            <TableRow>
-              <TableHead className="w-[1200px]">Termin</TableHead>
-              <TableHead className="w-[100px]">Opis</TableHead>
-              <TableHead>Cena</TableHead>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {visitsData.map((visit, index) => (
-              <TableRow key={index}>
-                <TableCell>{visit.date}</TableCell>
-                <TableCell>{visit.description}</TableCell>
-                <TableCell>{visit.price} zł</TableCell>
+          <Table>
+            <TableCaption>Lista wizyt</TableCaption>
+            <TableHead>
+              <TableRow>
+                <TableHead className="w-[1200px]">Termin</TableHead>
+                <TableHead className="w-[100px]">Opis</TableHead>
+                <TableHead>Cena</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div> */}
+            </TableHead>
+            <TableBody>
+              {visitsData.map((visit, index) => (
+                <TableRow key={index}>
+                  <TableCell>{visit.date}</TableCell>
+                  <TableCell>{visit.description}</TableCell>
+                  <TableCell>{visit.price} zł</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div> */}
       </div>
     </div>
   );

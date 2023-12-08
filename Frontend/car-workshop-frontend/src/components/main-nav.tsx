@@ -97,7 +97,7 @@ export function MainNav() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to="" className="text-white">
+                <Link to="/contactAndLocation" className="text-white">
                   Kontakt i lokalizacja
                 </Link>
               </DropdownMenuItem>
