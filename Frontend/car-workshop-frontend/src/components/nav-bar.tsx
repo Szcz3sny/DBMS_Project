@@ -1,5 +1,5 @@
-import { MainNav } from "@/components/main-nav";
-import { UserNav } from "@/components/user-nav";
+import { MainNav } from "@/components/main/main-nav";
+import { UserNav } from "@/components/user/user-nav";
 
 interface MainNavProps {
   isLoggedIn: boolean;

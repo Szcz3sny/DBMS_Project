@@ -1,25 +1,27 @@
-import { Link, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { Button } from "@/components/ui/button";
 
-export function MainNav() {
-  const navigate = useNavigate();
-
-  const handleLoginClick = () => {
-    navigate("/login");
-  };
-
+import { Link } from "react-router-dom";
+interface UserNavProps {
+  username?: string;
+  onLogout: () => void;
+}
+export function UserNav({
+  username,
+  onLogout,
+}: UserNavProps & { onLogout: () => void }) {
   return (
     <div className="bg-black">
       <div className="hidden md:block">
@@ -32,12 +34,12 @@ export function MainNav() {
                     to=""
                     className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
-                    Strona Główna
+                    Profil
                   </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link
-                    to=""
+                    to="/offers"
                     className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Oferta
@@ -45,7 +47,7 @@ export function MainNav() {
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link
-                    to=""
+                    to="/avaible-parts"
                     className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Dostępne części
@@ -54,7 +56,7 @@ export function MainNav() {
                 <NavigationMenuItem>
                   <Link
                     to="/contactAndLocation"
-                    className="block  text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
+                    className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Kontakt i lokalizacja
                   </Link>
@@ -62,11 +64,12 @@ export function MainNav() {
               </NavigationMenuList>
             </NavigationMenu>
           </div>
+
           <Button
-            onClick={handleLoginClick}
+            onClick={onLogout}
             className="py-2 px-4 bg-red-800 text-white rounded hover:bg-red-600 transition-colors duration-150 border border-red-600 hover:border-red-700 shadow md:ml-4"
           >
-            Logowanie
+            Wyloguj
           </Button>
         </div>
       </div>
@@ -83,16 +86,16 @@ export function MainNav() {
             <DropdownMenuContent className="bg-black rounded border-b border-black ">
               <DropdownMenuItem className="hover:bg-red-700">
                 <Link to="" className="text-white">
-                  Strona Główna
+                  Profil
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to="" className="text-white">
+                <Link to="/offers" className="text-white">
                   Oferta
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to="" className="text-white">
+                <Link to="/avaible-parts" className="text-white">
                   Dostępne części
                 </Link>
               </DropdownMenuItem>
@@ -104,10 +107,10 @@ export function MainNav() {
             </DropdownMenuContent>
           </DropdownMenu>
           <Button
-            onClick={handleLoginClick}
+            onClick={onLogout}
             className="py-2 px-4 bg-red-800 text-white rounded hover:bg-red-600 transition-colors duration-150 border border-red-600 hover:border-red-700 shadow md:ml-4"
           >
-            Logowanie
+            Wyloguj
           </Button>
         </div>
       </div>

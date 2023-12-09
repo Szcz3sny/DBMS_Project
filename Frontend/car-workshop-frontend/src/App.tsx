@@ -4,12 +4,9 @@ import { NavBar } from "@/components/nav-bar";
 import { Footer } from "@/components/footer";
 import HomePage from "@/components/home-page";
 import Login from "@/components/login";
-import Contact from "@/components/contactAndLocation";
-import UserDashboard from "./userDashboard";
-import CheckRepairStatus from "./CheckRepairStatus";
-import MyVehicles from "./MyVehicles";
-import ScheduleAppointment from "./ScheduleAppointment";
-import CheckVisits from "./components/check-visits";
+import Contact from "@/components/main/contactAndLocation";
+import Offers from "@/components/main/offers";
+import AParts from "@/components/main/available-parts";
 
 import { useState } from "react";
 
@@ -27,12 +24,8 @@ const ProtectedRoute = ({ isLoggedIn, children }: ProtectedRouteProps) => {
 };
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("isLoggedIn") === "true"
-  );
-  const [username, setUsername] = useState<string>(
-    localStorage.getItem("username") || ""
-  );
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState<string>("");
 
   const handleLoginSuccess = (username: string) => {
     setIsLoggedIn(true);
@@ -62,16 +55,8 @@ function App() {
             element={<Login onLoginSuccess={handleLoginSuccess} />}
           />
           <Route path="/contactAndLocation" element={<Contact />} />
-          <Route
-            path="/dashboard"
-            element={<UserDashboard username={username} />}
-          />
-          <Route path="check-repair-status" element={<CheckRepairStatus />} />
-          <Route path="my-vehicles" element={<MyVehicles />} />
-          <Route
-            path="schedule-appointment"
-            element={<ScheduleAppointment />}
-          />
+          <Route path="/offers" element={<Offers />} />
+          <Route path="/avaible-parts" element={<AParts />} />
         </Routes>
         <Footer />
       </BrowserRouter>

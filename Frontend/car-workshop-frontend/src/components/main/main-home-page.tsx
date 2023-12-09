@@ -1,4 +1,4 @@
-import warsztatImage from "./img/warsztatTło.png";
+import warsztatImage from "../img/warsztatTło.png";
 
 const MainHomePage = () => {
   return (

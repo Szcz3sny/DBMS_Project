@@ -1,6 +1,6 @@
 import React from "react";
-import MainHomePage from "@/components/main-home-page";
-import UserHomePage from "@/components/user-home-page";
+import MainHomePage from "@/components/main/main-home-page";
+import UserHomePage from "@/components/user/user-home-page";
 
 interface HomePageProps {
   isLoggedIn: boolean;

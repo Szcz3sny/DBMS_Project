@@ -1,9 +1,9 @@
+import { Link, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 import {
@@ -11,18 +11,15 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import { Button } from "@/components/ui/button";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+export function MainNav() {
+  const navigate = useNavigate();
 
-import { Link } from "react-router-dom";
-interface UserNavProps {
-  username?: string;
-  onLogout: () => void;
-}
-export function UserNav({
-  username,
-  onLogout,
-}: UserNavProps & { onLogout: () => void }) {
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
+
   return (
     <div className="bg-black">
       <div className="hidden md:block">
@@ -40,7 +37,7 @@ export function UserNav({
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link
-                    to=""
+                    to="/offers"
                     className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Oferta
@@ -48,7 +45,7 @@ export function UserNav({
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link
-                    to=""
+                    to="/avaible-parts"
                     className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Dostępne części
@@ -57,7 +54,7 @@ export function UserNav({
                 <NavigationMenuItem>
                   <Link
                     to="/contactAndLocation"
-                    className="block text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
+                    className="block  text-white hover:bg-red-700 hover:text-white px-2 py-1 rounded transition-colors duration-150 border-b border-red-800 hover:border-red-700"
                   >
                     Kontakt i lokalizacja
                   </Link>
@@ -65,27 +62,12 @@ export function UserNav({
               </NavigationMenuList>
             </NavigationMenu>
           </div>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Avatar className="cursor-pointer">
-                <AvatarImage src="" alt="Profil użytkownika" />
-                <AvatarFallback>{username ? username[0] : "U"}</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent className="bg-black py-2 px-4 bg-red-800 text-white rounded hover:bg-red-600 transition-colors duration-150 border border-red-600 hover:border-red-700 shadow">
-              <DropdownMenuItem>
-                <Link to="/dashboard">
-                  {username ? username : "Panel użytkownika"}
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={onLogout}>
-                <Link to="">Wyloguj</Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            onClick={handleLoginClick}
+            className="py-2 px-4 bg-red-800 text-white rounded hover:bg-red-600 transition-colors duration-150 border border-red-600 hover:border-red-700 shadow md:ml-4"
+          >
+            Logowanie
+          </Button>
         </div>
       </div>
       <div className="block md:hidden">
@@ -105,12 +87,12 @@ export function UserNav({
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to="" className="text-white">
+                <Link to="/offers" className="text-white">
                   Oferta
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to="" className="text-white">
+                <Link to="/avaible-parts" className="text-white">
                   Dostępne części
                 </Link>
               </DropdownMenuItem>
@@ -121,33 +103,12 @@ export function UserNav({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Avatar className="cursor-pointer">
-                <AvatarImage src="" alt="Profil użytkownika" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent className="bg-black text-white rounded border-b border-black">
-              <DropdownMenuItem className="hover:bg-200">
-                {username ? username : "Nieznany użytkownik"}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link to="">Umów wizytę</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link to="/check-visits">Sprawdź wizyty</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link to="">Sprawdź historię wizyt</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={onLogout}>
-                <Link to="">Wyloguj</Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            onClick={handleLoginClick}
+            className="py-2 px-4 bg-red-800 text-white rounded hover:bg-red-600 transition-colors duration-150 border border-red-600 hover:border-red-700 shadow md:ml-4"
+          >
+            Logowanie
+          </Button>
         </div>
       </div>
     </div>
