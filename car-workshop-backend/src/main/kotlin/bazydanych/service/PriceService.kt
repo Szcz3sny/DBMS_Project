@@ -16,6 +16,11 @@ class PriceService(
         return price.toDto()
     }
 
+    suspend fun findAllPrices(): List<PriceView> {
+        val prices = priceRepository.findAllPrices()
+        return prices.map { it.toDto() }
+    }
+
     suspend fun createPrice(form: PriceCreateForm): Price {
         if (form.price.signum() == -1) {
             throw IllegalArgumentException("Price cannot be negative")
@@ -36,7 +41,6 @@ class PriceService(
             price = details.price,
         )
     }
-
 
     suspend fun updatePrice(id: PriceId, form: PriceCreateForm): Price {
         val details = PriceCreateDetails(

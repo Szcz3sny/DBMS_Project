@@ -8,6 +8,8 @@ interface PriceRepository {
 
     suspend fun findPriceById(id: PriceId): Price?
 
+    suspend fun findAllPrices(): List<Price>
+
     suspend fun updatePrice(id: PriceId, details: PriceCreateDetails): Price?
 
     suspend fun createPrice(details: PriceCreateDetails): Boolean

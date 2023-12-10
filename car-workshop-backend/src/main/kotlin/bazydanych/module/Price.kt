@@ -21,7 +21,8 @@ fun Application.priceModule(priceService: PriceService) {
             authenticate {
                 post {
                     val priceCreateForm = call.receive<PriceCreateForm>()
-                    val principal: JWTUserPrincipal = call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
+                    val principal: JWTUserPrincipal =
+                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
 
                     if (principal.user.role == UserRole.ADMIN) {
                         val createdPrice = priceService.createPrice(priceCreateForm)
@@ -70,7 +71,14 @@ fun Application.priceModule(priceService: PriceService) {
                     if (principal.user.role == UserRole.ADMIN) {
                         val priceCreateForm = call.receive<PriceCreateForm>()
                         val updatedPrice = priceService.updatePrice(PriceId(id), priceCreateForm)
-                        call.respond(PriceCreationResponse(updatedPrice.id, updatedPrice.name, updatedPrice.description, updatedPrice.price))
+                        call.respond(
+                            PriceCreationResponse(
+                                updatedPrice.id,
+                                updatedPrice.name,
+                                updatedPrice.description,
+                                updatedPrice.price
+                            )
+                        )
                     } else {
                         call.respond(HttpStatusCode.Forbidden)
                     }
@@ -93,6 +101,10 @@ fun Application.priceModule(priceService: PriceService) {
                         } ?: call.respond(HttpStatusCode.NotFound)
                     }
                 }
+            }
+
+            get {
+                call.respond(priceService.findAllPrices())
             }
         }
     }

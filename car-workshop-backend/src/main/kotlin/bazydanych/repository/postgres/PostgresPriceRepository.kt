@@ -19,6 +19,10 @@ class PostgresPriceRepository(private val jooq: DSLContext) : PriceRepository {
         jooq.selectFrom(PricesTable.TABLE.where(PricesTable.ID.eq(id.value))).fetchOne { parse(it) }
     }
 
+    override suspend fun findAllPrices(): List<Price> = withContext(Dispatchers.IO) {
+        jooq.selectFrom(PricesTable.TABLE).fetch { parse(it) }
+    }
+
     override suspend fun createPrice(details: PriceCreateDetails): Boolean = withContext(Dispatchers.IO) {
         jooq.insertInto(PricesTable.TABLE)
             .columns(
