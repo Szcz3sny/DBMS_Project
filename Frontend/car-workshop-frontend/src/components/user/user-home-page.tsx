@@ -23,8 +23,6 @@ const UserHomePage: React.FC<UserHomePageProps> = ({ username }) => {
 
   const renderComponent = () => {
     switch (activeComponent) {
-      case "schedule-appointment":
-        return <ScheduleAppointment />;
       case "my-vehicles":
         return <MyVehicles />;
       case "check-repair-status":
@@ -52,13 +50,7 @@ const UserHomePage: React.FC<UserHomePageProps> = ({ username }) => {
       aria-label="Warsztat"
     >
       <div className="h-8 md:h-8 "></div>
-      <div className="mx-auto max-w-screen-lg flex flex-col md:flex-row justify-center md:justify-between items-center w-full max-w-4xl p-4 bg-black bg-opacity-80 rounded mt-4">
-        <div
-          className={menuItemClass("schedule-appointment")}
-          onClick={() => setActiveComponent("schedule-appointment")}
-        >
-          Umów się na wizytę
-        </div>
+      <div className="mx-auto  flex flex-col md:flex-row justify-center md:justify-between items-center w-full max-w-2xl p-4 bg-black bg-opacity-80 rounded mt-4">
         <div
           className={menuItemClass("my-vehicles")}
           onClick={() => setActiveComponent("my-vehicles")}

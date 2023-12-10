@@ -8,26 +8,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import warsztatImage from "../img/warsztatTło.png";
+import useSWR from "swr";
 
-const visitsData = [
-  {
-    fault: "Zmiana oleju",
-    description: "Wymiana oleju w samochodzie",
-    price: "100.00",
-  },
-  {
-    fault: "Sprawdzenie hamulców",
-    description: "Sprawdzenie hamulców w samochodzie czy wszystko działa.",
-    price: "250.00",
-  },
-  {
-    fault: "Zmiana opon",
-    description: "Wymiana opon na nowe.",
-    price: "800.00",
-  },
-];
+type ApiData = {
+  id: number;
+  name: string;
+  description: string;
+  price: string;
+};
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const Offers = () => {
+export default function Offers() {
+  const { data, error, isLoading } = useSWR(
+    "https://api.bazydanych.fun/v1/price",
+    fetcher
+  );
+
+  if (error) return "An error has occurred.";
+  if (isLoading) return "Loading...";
   return (
     <div
       className="w-full bg-no-repeat bg-cover bg-center"
@@ -57,11 +55,11 @@ const Offers = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {visitsData.map((visit, index) => (
+            {data.map((item: ApiData, index: number) => (
               <TableRow key={index}>
-                <TableCell>{visit.fault}</TableCell>
-                <TableCell>{visit.description}</TableCell>
-                <TableCell>{visit.price} zł</TableCell>
+                <TableCell>{item.name}</TableCell>
+                <TableCell>{item.description}</TableCell>
+                <TableCell>{parseFloat(item.price).toFixed(2)} zł</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -69,6 +67,4 @@ const Offers = () => {
       </div>
     </div>
   );
-};
-
-export default Offers;
+}
