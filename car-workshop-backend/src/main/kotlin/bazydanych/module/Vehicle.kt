@@ -20,14 +20,14 @@ fun Application.vehicleModule(
     vehicleService: VehicleService
 ) {
     routing {
-        route("/v1/user/{user-id}/vehicles") {
+        route("/v1/user/{userId}/vehicles") {
             authenticate {
                 post {
                     val principal: JWTUserPrincipal =
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
 
                     val createForm = call.receive<VehicleCreateForm>()
-                    val userId = call.parameters["user-id"]?.toIntOrNull() ?: run {
+                    val userId = call.parameters["userId"]?.toIntOrNull() ?: run {
                         call.respond(HttpStatusCode.BadRequest)
                         return@post
                     }
@@ -49,7 +49,7 @@ fun Application.vehicleModule(
                     val principal: JWTUserPrincipal =
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
 
-                    val userId = call.parameters["user-id"]?.toIntOrNull() ?: run {
+                    val userId = call.parameters["userId"]?.toIntOrNull() ?: run {
                         call.respond(HttpStatusCode.BadRequest)
                         return@get
                     }
@@ -60,8 +60,7 @@ fun Application.vehicleModule(
                     }
 
                     if (principal.user.role == UserRole.ADMIN || principal.user.id == owner.id) {
-                        val vehicles = vehicleService.findVehiclesByOwner(owner)
-                        call.respond(vehicles)
+                        call.respond(vehicleService.findVehiclesByOwner(owner))
                     } else {
                         call.respond(HttpStatusCode.Forbidden)
                     }
@@ -71,7 +70,7 @@ fun Application.vehicleModule(
                     val principal: JWTUserPrincipal =
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
 
-                    val userId = call.parameters["user-id"]?.toIntOrNull() ?: run {
+                    val userId = call.parameters["userId"]?.toIntOrNull() ?: run {
                         call.respond(HttpStatusCode.BadRequest)
                         return@get
                     }
