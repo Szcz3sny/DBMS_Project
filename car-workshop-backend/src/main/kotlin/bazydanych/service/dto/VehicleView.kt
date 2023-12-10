@@ -2,7 +2,9 @@ package bazydanych.service.dto
 
 import bazydanych.model.Vehicle
 import bazydanych.model.VehicleId
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class VehicleView(
     val id: VehicleId,
     val owner: UserView,

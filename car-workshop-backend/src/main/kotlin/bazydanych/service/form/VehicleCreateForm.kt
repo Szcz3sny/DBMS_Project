@@ -1,5 +1,8 @@
 package bazydanych.service.form
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class VehicleCreateForm(
     val brand: String,
     val model: String,
