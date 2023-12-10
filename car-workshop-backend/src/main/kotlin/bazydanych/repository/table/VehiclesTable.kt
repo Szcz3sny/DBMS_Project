@@ -7,7 +7,7 @@ object VehiclesTable {
 
     val TABLE = DSL.table("vehicles")
 
-    val ID = DSL.field("id", SQLDataType.INTEGER)
+    val ID = DSL.field(DSL.name(TABLE.name, "id"), SQLDataType.INTEGER)
     val OWNER_ID = DSL.field("owner_id", SQLDataType.INTEGER)
     val BRAND = DSL.field("brand", SQLDataType.VARCHAR(64))
     val MODEL = DSL.field("model", SQLDataType.VARCHAR(64))
