@@ -88,7 +88,7 @@ fun Application.repairsModule(
                     call.respond(repairsService.findRepairPhotosIdsByRepairId(RepairId(repairId)))
                 }
 
-                delete("/{repairId/photos/{photoId}") {
+                delete("/{repairId}/photos/{photoId}") {
                     val principal: JWTUserPrincipal =
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
 
