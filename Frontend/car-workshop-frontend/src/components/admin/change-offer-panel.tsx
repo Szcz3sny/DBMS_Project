@@ -102,7 +102,7 @@ export default function ChangeOfferPanel() {
               placeholder="Cena"
             />
             <button
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
+              className="bg-green-800 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
               onClick={addOffer}
             >
               Dodaj
@@ -120,7 +120,7 @@ export default function ChangeOfferPanel() {
                 >
                   <span>{offer.name}</span>
                   <button
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded transition-colors duration-300"
+                    className="bg-red-800 hover:bg-red-600 text-white font-bold py-1 px-3 rounded transition-colors duration-300"
                     onClick={() => deleteOffer(offer.id)}
                   >
                     Usuń

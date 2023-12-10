@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NavBar } from "@/components/nav-bar";
 import { Footer } from "@/components/footer";
 import HomePage from "@/components/home-page";
@@ -7,25 +7,21 @@ import Login from "@/components/login";
 import Contact from "@/components/main/contactAndLocation";
 import Offers from "@/components/main/offers";
 import AParts from "@/components/main/available-parts";
-import ScheduleAppointment from "@/components/user/ScheduleAppointment"; // Import the ScheduleAppointment component
-import { useState } from "react";
-
-interface ProtectedRouteProps {
-  isLoggedIn: boolean;
-  children: JSX.Element;
-}
-
-const ProtectedRoute = ({ isLoggedIn, children }: ProtectedRouteProps) => {
-  if (!isLoggedIn) {
-    return <Navigate to="/login" />;
-  }
-
-  return children;
-};
+import { useEffect, useState } from "react";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState<string>("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const storedUsername = localStorage.getItem("username");
+
+    if (token) {
+      setIsLoggedIn(true);
+      if (storedUsername) setUsername(storedUsername);
+    }
+  }, []);
 
   const handleLoginSuccess = (username: string) => {
     setIsLoggedIn(true);
@@ -33,10 +29,19 @@ function App() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
     setIsLoggedIn(false);
     setUsername("");
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const storedUsername = localStorage.getItem("username");
+    if (token && storedUsername) {
+      setIsLoggedIn(true);
+      setUsername(storedUsername);
+    }
+  }, []);
   return (
     <>
       <BrowserRouter>
