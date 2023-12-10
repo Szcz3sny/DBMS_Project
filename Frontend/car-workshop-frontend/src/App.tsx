@@ -7,7 +7,7 @@ import Login from "@/components/login";
 import Contact from "@/components/main/contactAndLocation";
 import Offers from "@/components/main/offers";
 import AParts from "@/components/main/available-parts";
-
+import ScheduleAppointment from "@/components/user/ScheduleAppointment"; // Import the ScheduleAppointment component
 import { useState } from "react";
 
 interface ProtectedRouteProps {
