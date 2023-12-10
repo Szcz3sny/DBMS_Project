@@ -1,15 +1,9 @@
 package bazydanych
 
-import bazydanych.module.priceModule
-import bazydanych.module.userModule
-import bazydanych.module.vehicleModule
+import bazydanych.module.*
 import bazydanych.plugins.*
-import bazydanych.repository.postgres.PostgresUserRepository
-import bazydanych.repository.postgres.PostgresPriceRepository
-import bazydanych.repository.postgres.PostgresVehicleRepository
-import bazydanych.service.UserService
-import bazydanych.service.PriceService
-import bazydanych.service.VehicleService
+import bazydanych.repository.postgres.*
+import bazydanych.service.*
 import io.ktor.server.application.*
 import kotlinx.coroutines.runBlocking
 import org.jooq.SQLDialect
@@ -36,12 +30,17 @@ fun Application.publicApi() {
     val userRepository = PostgresUserRepository(jooq)
     val priceRepository = PostgresPriceRepository(jooq)
     val vehicleRepository = PostgresVehicleRepository(jooq)
+    val repairsRepository = PostgresRepairsRepository(jooq)
+    val repairsPhotosRepository = PostgresRepairPhotosRepository(jooq)
+    val filesRepository = PostgresFileDataRepository(jooq)
 
     val jwtGenerator = configureSecurity(userRepository)
+    val fileStorageService = BaseFileStorageService(filesRepository, "https://api.bazydanych.fun/v1/images/{token}") // TODO: Move to config
 
     val userService = UserService(userRepository, jwtGenerator)
     val priceService = PriceService(priceRepository)
     val vehicleService = VehicleService(vehicleRepository, userService)
+    val repairsService = RepairsService(repairsRepository, repairsPhotosRepository, fileStorageService)
 
     runBlocking {
         userService.createDefaultUserIfNotExists()
@@ -50,4 +49,6 @@ fun Application.publicApi() {
     userModule(userService)
     priceModule(priceService)
     vehicleModule(userService, vehicleService)
+    repairsModule(repairsService)
+    imagesModule(fileStorageService)
 }
