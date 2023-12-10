@@ -83,28 +83,21 @@ fun Application.priceModule(priceService: PriceService) {
                         call.respond(HttpStatusCode.Forbidden)
                     }
                 }
-
-                get("/{id}") {
-                    val id = call.parameters["id"]?.toIntOrNull() ?: run {
-                        call.respond(HttpStatusCode.BadRequest)
-                        return@get
-                    }
-
-                    val principal: JWTUserPrincipal =
-                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
-
-                    if (principal.user.role == UserRole.GUEST) {
-                        call.respond(HttpStatusCode.Forbidden)
-                    } else {
-                        priceService.findPriceById(PriceId(id))?.let { priceView ->
-                            call.respond(priceView)
-                        } ?: call.respond(HttpStatusCode.NotFound)
-                    }
-                }
             }
 
             get {
                 call.respond(priceService.findAllPrices())
+            }
+
+            get("/{id}") {
+                val id = call.parameters["id"]?.toIntOrNull() ?: run {
+                    call.respond(HttpStatusCode.BadRequest)
+                    return@get
+                }
+
+                priceService.findPriceById(PriceId(id))?.let { priceView ->
+                    call.respond(priceView)
+                } ?: call.respond(HttpStatusCode.NotFound)
             }
         }
     }
