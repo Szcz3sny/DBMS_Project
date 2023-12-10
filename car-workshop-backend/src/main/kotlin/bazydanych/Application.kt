@@ -33,6 +33,9 @@ fun Application.publicApi() {
     val repairsRepository = PostgresRepairsRepository(jooq)
     val repairsPhotosRepository = PostgresRepairPhotosRepository(jooq)
     val filesRepository = PostgresFileDataRepository(jooq)
+    val calendarRepository = PostgresCalendarRepository(jooq)
+    val partsRepository = PostgresPartsRepository(jooq)
+    val ordersRepository = PostgresOrdersRepository(jooq)
 
     val jwtGenerator = configureSecurity(userRepository)
     val fileStorageService = BaseFileStorageService(filesRepository, "https://api.bazydanych.fun/v1/images/{token}") // TODO: Move to config
@@ -41,6 +44,9 @@ fun Application.publicApi() {
     val priceService = PriceService(priceRepository)
     val vehicleService = VehicleService(vehicleRepository, userService)
     val repairsService = RepairsService(repairsRepository, repairsPhotosRepository, fileStorageService)
+    val calendarService = CalendarService(calendarRepository)
+    val partsService = PartsService(partsRepository, fileStorageService)
+    val ordersService = OrdersService(ordersRepository, partsService)
 
     runBlocking {
         userService.createDefaultUserIfNotExists()
@@ -51,4 +57,8 @@ fun Application.publicApi() {
     vehicleModule(userService, vehicleService)
     repairsModule(repairsService)
     imagesModule(fileStorageService)
+    calendarModule(calendarService)
+    priceModule(priceService)
+    partsModule(partsService)
+    ordersModule(userService, ordersService)
 }

@@ -4,6 +4,7 @@ import bazydanych.model.OrdersId
 import bazydanych.model.user.UserId
 import bazydanych.model.user.UserRole
 import bazydanych.plugins.JWTUserPrincipal
+import bazydanych.service.UserService
 import bazydanych.service.OrdersService
 import bazydanych.service.form.OrdersCreateForm
 import io.ktor.http.*
@@ -14,22 +15,84 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 
-fun Application.ordersModule(ordersService: OrdersService) {
+fun Application.ordersModule(
+    userService: UserService,
+    ordersService: OrdersService
+) {
     routing {
-        route("/v1/orders") {
+        route("/v1/user/{user-id}/orders") {
             authenticate {
                 post {
-                    val ordersCreateForm = call.receive<OrdersCreateForm>()
                     val principal: JWTUserPrincipal =
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
 
+                    val createForm = call.receive<OrdersCreateForm>()
+                    val userId = call.parameters["user-id"]?.toIntOrNull() ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@post
+                    }
+
+                    val owner = userService.findUserById(UserId(userId)) ?: run {
+                        call.respond(HttpStatusCode.NotFound, "User not found")
+                        return@post
+                    }
+
                     if (principal.user.role == UserRole.ADMIN) {
-                        val createdOrders = ordersService.createOrders(principal.user, ordersCreateForm)
-                        call.respond(
-                            OrdersAddResponse(
-                                createdOrders.id
-                            )
-                        )
+                        val orderId = ordersService.addOrders(owner, createForm)
+                        call.respond(OrderAddResponse(orderId))
+                    } else {
+                        call.respond(HttpStatusCode.Forbidden)
+                    }
+                }
+
+                get {
+                    val principal: JWTUserPrincipal =
+                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
+
+                    val userId = call.parameters["user-id"]?.toIntOrNull() ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@get
+                    }
+
+                    val owner = userService.findUserById(UserId(userId)) ?: run {
+                        call.respond(HttpStatusCode.NotFound, "User not found")
+                        return@get
+                    }
+
+                    if (principal.user.role == UserRole.ADMIN || principal.user.id == owner.id) {
+                        val orders = ordersService.findOrdersByOwner(owner)
+                        call.respond(orders)
+                    } else {
+                        call.respond(HttpStatusCode.Forbidden)
+                    }
+                }
+
+                get("/{id}") {
+                    val principal: JWTUserPrincipal =
+                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
+
+                    val userId = call.parameters["user-id"]?.toIntOrNull() ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@get
+                    }
+
+                    val owner = userService.findUserById(UserId(userId)) ?: run {
+                        call.respond(HttpStatusCode.NotFound, "User not found")
+                        return@get
+                    }
+
+                    if (principal.user.role == UserRole.ADMIN || principal.user.id == owner.id) {
+                        val orderId = call.parameters["id"]?.toIntOrNull() ?: run {
+                            call.respond(HttpStatusCode.BadRequest)
+                            return@get
+                        }
+
+                        val order = ordersService.findOrdersById(OrdersId(orderId)) ?: run {
+                            call.respond(HttpStatusCode.NotFound, "Order not found")
+                            return@get
+                        }
+
+                        call.respond(order)
                     } else {
                         call.respond(HttpStatusCode.Forbidden)
                     }
@@ -45,7 +108,7 @@ fun Application.ordersModule(ordersService: OrdersService) {
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
 
                     if (principal.user.role == UserRole.ADMIN) {
-                        if (ordersService.deleteOrders(OrdersId(id))) {
+                        if (ordersService.deleteOrder(OrdersId(id))) {
                             call.respond(HttpStatusCode.OK)
                         } else {
                             call.respond(HttpStatusCode.NotFound)
@@ -55,51 +118,10 @@ fun Application.ordersModule(ordersService: OrdersService) {
                     }
                 }
 
-                put("/{id}") {
-                    val id = call.parameters["id"]?.toIntOrNull() ?: run {
-                        call.respond(HttpStatusCode.BadRequest)
-                        return@put
-                    }
-
-                    val principal: JWTUserPrincipal =
-                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
-
-                    if (principal.user.role == UserRole.ADMIN) {
-                        val ordersCreateForm = call.receive<OrdersCreateForm>()
-                        val updatedOrders = ordersService.updateOrders(OrdersId(id), ordersCreateForm)
-                        if (updatedOrders != null) {
-                            call.respond(
-                                OrdersAddResponse(
-                                    updatedOrders.id
-                                )
-                            )
-                        }
-                    } else {
-                        call.respond(HttpStatusCode.Forbidden)
-                    }
-                }
-
-            }
-
-            get {
-                call.respond(ordersService.findAllOrders())
-            }
-
-            get("/{id}") {
-                val id = call.parameters["id"]?.toIntOrNull() ?: run {
-                    call.respond(HttpStatusCode.BadRequest)
-                    return@get
-                }
-
-                ordersService.findOrdersById(OrdersId(id))?.let { ordersView ->
-                    call.respond(ordersView)
-                } ?: call.respond(HttpStatusCode.NotFound)
             }
         }
     }
 }
 
 @Serializable
-data class OrdersAddResponse(
-    val id: OrdersId
-)
+class OrderAddResponse(val id: OrdersId)

@@ -3,51 +3,44 @@ package bazydanych.service
 import bazydanych.model.parts.Parts
 import bazydanych.model.parts.PartsId
 import bazydanych.repository.PartsRepository
-import bazydanych.service.dto.PartsView
-import bazydanych.service.dto.toDto
 import bazydanych.service.form.PartsCreateForm
+import java.io.InputStream
 
-class PartsService(private val partsRepository: PartsRepository) {
+class PartsService(
+    private val partsRepository: PartsRepository,
+    private val fileStorageService: FileStorageService
+) {
 
-    suspend fun findPartsById(id: PartsId): PartsView? {
-        val parts = partsRepository.findPartsById(id) ?: return null
-        return parts.toDto()
-    }
-
-    suspend fun findAllParts(): List<PartsView> {
-        val parts = partsRepository.findAllParts()
-        return parts.map { it.toDto() }
+    suspend fun findPartsById(id: PartsId): Parts? {
+        return partsRepository.findPartsById(id)
     }
 
     suspend fun createParts(form: PartsCreateForm): Parts {
-        // Validation logic if needed
-
         val details = PartsCreateDetails(
-            name = form.name,
+            id_Vehicle = form.id_Vehicle,
+            product_name = form.product_name,
             price = form.price,
+            image = null.toString()
         )
 
         val id = partsRepository.save(details)
 
         return Parts(
             id = id,
-            name = details.name,
-            price = details.price,
-        )
-    }
-
-    suspend fun updateParts(id: PartsId, form: PartsCreateForm): Parts {
-        // Validation logic if needed
-
-        val details = PartsCreateDetails(
-            name = form.name,
+            id_Vehicle = form.id_Vehicle,
+            product_name = form.product_name,
             price = form.price,
+            image = null
         )
-
-        return partsRepository.updateParts(id, details) ?: throw NoSuchElementException("Part not found")
     }
 
     suspend fun deleteParts(id: PartsId): Boolean {
-        return partsRepository.deleteParts(id)
+        return partsRepository.delete(id)
     }
+
+    suspend fun updateImage(id: PartsId, fileStream: InputStream): Boolean {
+        val imageUrl = fileStorageService.uploadImage(fileStream)
+        return partsRepository.updateImage(id, imageUrl)
+    }
+
 }

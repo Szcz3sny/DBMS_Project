@@ -10,7 +10,9 @@ typealias PartsId = Id<Parts>
 @Serializable
 data class Parts(
     val id: PartsId,
-    val name: String,
+    val id_Vehicle: Int,
+    val product_name: String,
+    val image: String? = null,
     @Serializable(with = BigDecimalSerializer::class)
     val price: BigDecimal,
-)
+    )

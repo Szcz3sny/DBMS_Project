@@ -3,7 +3,7 @@ package bazydanych.repository
 import bazydanych.model.user.UserId
 
 data class OrdersCreateDetails(
-    val userId: UserId,
-    val partsId: String,
-    val status: String,
+    val ownerId: UserId,
+    val Id_Parts: Int,
+    val Status: String,
 )

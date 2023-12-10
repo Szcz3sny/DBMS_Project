@@ -8,7 +8,7 @@ typealias OrdersId = Id<Orders>
 @Serializable
 data class Orders(
     val id: OrdersId,
-    val userId: UserId,
-    val partsId: String,
-    val status: String
+    val ownerId: UserId,
+    val Id_Parts: Int,
+    val Status: String,
 )

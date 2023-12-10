@@ -2,17 +2,14 @@ package bazydanych.service.dto
 
 import bazydanych.model.Orders
 import bazydanych.model.OrdersId
-
+import kotlinx.serialization.Serializable
+@Serializable
 data class OrdersView(
     val id: OrdersId,
-    val user: UserView,
-    val partsId: String,
-    val status: String,
+    val Status: String,
 )
 
-fun Orders.toDto(user: UserView) = OrdersView(
+fun Orders.toDto() = OrdersView(
     id = id,
-    user = user,
-    partsId = partsId,
-    status = status,
+    Status = Status,
 )
