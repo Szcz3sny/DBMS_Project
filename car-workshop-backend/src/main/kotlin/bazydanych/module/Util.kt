@@ -20,7 +20,7 @@ suspend fun ApplicationCall.receiveImageFile(partName: String): PartData.FileIte
 
     val contentType = partData.contentType
         ?: throw BadRequestException("No file content type provided")
-    if (imageContentTypes.contains(contentType))
+    if (!imageContentTypes.contains(contentType))
         throw BadRequestException("Invalid file content type")
 
     val contentLength = request.contentLength()
