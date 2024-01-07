@@ -26,6 +26,7 @@ fun Application.publicApi() {
     configureSerialization()
     configureMonitoring()
     configureHTTP()
+    configureValidation()
 
     val userRepository = PostgresUserRepository(jooq)
     val priceRepository = PostgresPriceRepository(jooq)
