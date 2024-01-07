@@ -26,6 +26,7 @@ fun Application.publicApi() {
     configureSerialization()
     configureMonitoring()
     configureHTTP()
+    configureValidation()
 
     val userRepository = PostgresUserRepository(jooq)
     val priceRepository = PostgresPriceRepository(jooq)
@@ -36,7 +37,7 @@ fun Application.publicApi() {
     val calendarRepository = PostgresCalendarRepository(jooq)
     val partsRepository = PostgresPartsRepository(jooq)
     val ordersRepository = PostgresOrdersRepository(jooq)
-
+    
     val jwtGenerator = configureSecurity(userRepository)
     val fileStorageService = BaseFileStorageService(filesRepository, "https://api.bazydanych.fun/v1/images/{token}") // TODO: Move to config
 

@@ -29,6 +29,7 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
+    implementation("io.ktor:ktor-server-request-validation:$ktor_version")
     implementation("org.postgresql:postgresql:$postgres_version")
     implementation("com.h2database:h2:$h2_version")
     implementation("io.ktor:ktor-server-auth-jvm")
@@ -48,6 +49,7 @@ dependencies {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
     implementation("org.apache.tika:tika-core:2.9.1")
+    implementation("io.konform:konform-jvm:0.4.0")
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }
