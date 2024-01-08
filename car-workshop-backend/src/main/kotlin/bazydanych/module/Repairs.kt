@@ -103,7 +103,7 @@ fun Application.repairsModule(
                         return@delete
                     }
 
-                     repairsService.deleteRepairPhoto(RepairPhotoId(repairId))
+                    repairsService.deleteRepairPhoto(RepairPhotoId(repairId))
                 }
             }
         }

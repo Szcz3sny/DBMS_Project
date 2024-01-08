@@ -1,5 +1,6 @@
 package bazydanych.service.form
 
+import kotlinx.serialization.Serializable
 import io.konform.validation.Validation
 import io.konform.validation.jsonschema.maxLength
 import io.konform.validation.jsonschema.maximum
