@@ -18,15 +18,15 @@ class OrdersService(
 
     suspend fun findOrdersById(id: OrdersId): OrdersView? {
         val order = ordersRepository.findOrdersById(id) ?: return null
-        val customer = partsService.findPartsById(PartsId(order.Id_Parts)) ?: return null
+        val customer = partsService.findPartsById(PartsId(order.partsId)) ?: return null
         return order.toDto()
     }
 
     suspend fun addOrders(owner: User, createForm: OrdersCreateForm): OrdersId {
         val orderDetails = OrdersCreateDetails(
             ownerId = owner.id,
-            Id_Parts = createForm.Id_Parts,
-            Status = createForm.Status
+            partsId = createForm.partsId,
+            status = createForm.status
         )
         return ordersRepository.insert(orderDetails)
     }
@@ -39,8 +39,8 @@ class OrdersService(
     suspend fun createOrder(customer: Parts, form: OrdersCreateForm): OrdersId {
         val details = OrdersCreateDetails(
             ownerId = UserId(customer.id.value),
-            Id_Parts = form.Id_Parts,
-            Status = form.Status
+            partsId = form.partsId,
+            status = form.status
         )
 
         return ordersRepository.insert(details)

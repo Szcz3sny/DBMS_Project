@@ -8,8 +8,8 @@ import kotlinx.datetime.LocalDateTime
 @Serializable
 data class CalendarCreateForm(
     val id: Int,
-    val id_Vehicle: Int,
-    val id_User: Int,
+    val vehicleId: Int,
+    val userId: Int,
     val defect: String,
     val datetime: LocalDateTime,
     val status: String,

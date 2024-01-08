@@ -24,8 +24,8 @@ class PostgresPartsRepository(private val jooq: DSLContext) : PartsRepository {
                 PartsTable.PRICE,
                 PartsTable.IMAGE
             ).values(
-                details.id_Vehicle,
-                details.product_name,
+                details.vehicleId,
+                details.productName,
                 details.price,
                 details.image
             ).returning(PartsTable.ID).fetchOne()?.let {
@@ -42,8 +42,8 @@ class PostgresPartsRepository(private val jooq: DSLContext) : PartsRepository {
     private fun parse(it: Record): Parts {
         return Parts(
             id = PartsId(it.getValue(PartsTable.ID)),
-            id_Vehicle = it.getValue(PartsTable.VEHICLE_ID),
-            product_name = it.getValue(PartsTable.PRODUCT_NAME),
+            vehicleId = it.getValue(PartsTable.VEHICLE_ID),
+            productName = it.getValue(PartsTable.PRODUCT_NAME),
             price = it.getValue(PartsTable.PRICE),
             image = it.getValue(PartsTable.IMAGE)
         )
@@ -57,8 +57,8 @@ class PostgresPartsRepository(private val jooq: DSLContext) : PartsRepository {
                 PartsTable.PRICE,
                 PartsTable.IMAGE
             ).values(
-                details.id_Vehicle,
-                details.product_name,
+                details.vehicleId,
+                details.productName,
                 details.price,
                 details.image
             ).returning(PartsTable.ID).fetchOne()?.let {
@@ -67,8 +67,8 @@ class PostgresPartsRepository(private val jooq: DSLContext) : PartsRepository {
 
         Parts(
             id = PartsId(id),
-            id_Vehicle = details.id_Vehicle,
-            product_name = details.product_name,
+            vehicleId = details.vehicleId,
+            productName = details.productName,
             price = details.price,
             image = details.image
         )

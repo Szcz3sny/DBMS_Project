@@ -9,8 +9,8 @@ typealias CalendarId = Id<Calendar>
 @Serializable
 data class Calendar(
     val id: CalendarId,
-    val id_Vehicle: Int,
-    val id_User: Int,
+    val vehicleId: Int,
+    val userId: Int,
     val datetime: LocalDateTime,
     val defect: String,
     val status: String

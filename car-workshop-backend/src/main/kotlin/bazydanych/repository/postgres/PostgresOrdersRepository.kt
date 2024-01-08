@@ -6,7 +6,6 @@ import bazydanych.model.user.UserId
 import bazydanych.repository.OrdersCreateDetails
 import bazydanych.repository.OrdersRepository
 import bazydanych.repository.table.OrdersTable
-import bazydanych.repository.table.VehiclesTable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jooq.DSLContext
@@ -29,8 +28,8 @@ class PostgresOrdersRepository(private val jooq: DSLContext) : OrdersRepository 
                 OrdersTable.STATUS,
             ).values(
                 Orders.ownerId.value,
-                Orders.Id_Parts,
-                Orders.Status
+                Orders.partsId,
+                Orders.status
 
             ).returning(OrdersTable.ID).fetchOne()?.let {
                 val id = it.getValue(OrdersTable.ID) ?: throw IllegalStateException("No Orders id returned")
@@ -45,8 +44,8 @@ class PostgresOrdersRepository(private val jooq: DSLContext) : OrdersRepository 
     private fun parse(it: Record): Orders = Orders(
         id = OrdersId(it.getValue(OrdersTable.ID)),
         ownerId = UserId(it.getValue(OrdersTable.USER_ID)),
-        Id_Parts = it.getValue(OrdersTable.PART_ID),
-        Status = it.getValue(OrdersTable.STATUS),
+        partsId = it.getValue(OrdersTable.PART_ID),
+        status = it.getValue(OrdersTable.STATUS),
 
     )
 }

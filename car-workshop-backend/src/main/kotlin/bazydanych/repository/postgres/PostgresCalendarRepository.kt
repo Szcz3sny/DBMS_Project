@@ -7,13 +7,9 @@ import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import bazydanych.model.calendar.Calendar
 import bazydanych.model.calendar.CalendarId
-import bazydanych.service.dto.CalendarView
-import bazydanych.model.user.UserId
-import bazydanych.model.VehicleId
 import bazydanych.repository.table.CalendarsTable
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.jooq.DSLContext
 import org.jooq.Record
 import java.sql.Timestamp
@@ -31,8 +27,8 @@ class PostgresCalendarRepository(private val jooq: DSLContext) : CalendarReposit
     override suspend fun updateCalendar(id: CalendarId, details: CalendarCreateDetails): Calendar? =
         withContext(Dispatchers.IO) {
             jooq.update(CalendarsTable.TABLE)
-                .set(CalendarsTable.ID_USER, details.id_User)
-                .set(CalendarsTable.ID_VEHICLE, details.id_Vehicle)
+                .set(CalendarsTable.ID_USER, details.userId)
+                .set(CalendarsTable.ID_VEHICLE, details.vehicleId)
                 .set(CalendarsTable.DATETIME, details.datetime.toJavaLocalDateTime())
                 .set(CalendarsTable.DEFECT, details.defect)
                 .set(CalendarsTable.STATUS, details.status)
@@ -50,8 +46,8 @@ class PostgresCalendarRepository(private val jooq: DSLContext) : CalendarReposit
     override suspend fun createCalendar(details: CalendarCreateDetails): CalendarId =
         withContext(Dispatchers.IO) {
             val id = jooq.insertInto(CalendarsTable.TABLE)
-                .set(CalendarsTable.ID_USER, details.id_User)
-                .set(CalendarsTable.ID_VEHICLE, details.id_Vehicle)
+                .set(CalendarsTable.ID_USER, details.userId)
+                .set(CalendarsTable.ID_VEHICLE, details.vehicleId)
                 .set(CalendarsTable.DATETIME, details.datetime.toJavaLocalDateTime())
                 .set(CalendarsTable.DEFECT, details.defect)
                 .set(CalendarsTable.STATUS, details.status)
@@ -69,8 +65,8 @@ class PostgresCalendarRepository(private val jooq: DSLContext) : CalendarReposit
         return it!!.let {
             Calendar(
                 id = CalendarId(it.getValue(CalendarsTable.ID)),
-                id_Vehicle = it.getValue(CalendarsTable.ID_VEHICLE),
-                id_User = it.getValue(CalendarsTable.ID_USER),
+                vehicleId = it.getValue(CalendarsTable.ID_VEHICLE),
+                userId = it.getValue(CalendarsTable.ID_USER),
                 datetime = it.get(CalendarsTable.DATETIME, Timestamp::class.java)
                     .toLocalDateTime()
                     .toKotlinLocalDateTime(),

@@ -9,6 +9,6 @@ typealias OrdersId = Id<Orders>
 data class Orders(
     val id: OrdersId,
     val ownerId: UserId,
-    val Id_Parts: Int,
-    val Status: String,
+    val partsId: Int,
+    val status: String,
 )

@@ -6,10 +6,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class OrdersView(
     val id: OrdersId,
-    val Status: String,
+    val status: String,
 )
 
 fun Orders.toDto() = OrdersView(
     id = id,
-    Status = Status,
+    status = status,
 )

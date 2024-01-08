@@ -1,11 +1,9 @@
 package bazydanych.service
 
-import bazydanych.model.calendar.Calendar
 import bazydanych.model.calendar.CalendarId
 import bazydanych.repository.CalendarRepository
 import bazydanych.service.dto.CalendarView
 import bazydanych.service.form.CalendarCreateForm
-import java.time.LocalDateTime
 import bazydanych.service.dto.toDto
 
 
@@ -39,8 +37,8 @@ class CalendarService(private val calendarRepository: CalendarRepository) {
     private fun CalendarCreateForm.toCalendarCreateDetails(): CalendarCreateDetails {
         return CalendarCreateDetails(
             id = this.id,
-            id_Vehicle = this.id_Vehicle,
-            id_User = this.id_User,
+            vehicleId = this.vehicleId,
+            userId = this.userId,
             datetime = this.datetime,
             defect = this.defect,
             status = this.status

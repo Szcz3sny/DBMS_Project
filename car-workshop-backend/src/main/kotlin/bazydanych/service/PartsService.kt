@@ -17,8 +17,8 @@ class PartsService(
 
     suspend fun createParts(form: PartsCreateForm): Parts {
         val details = PartsCreateDetails(
-            id_Vehicle = form.id_Vehicle,
-            product_name = form.product_name,
+            vehicleId = form.id_Vehicle,
+            productName = form.product_name,
             price = form.price,
             image = null.toString()
         )
@@ -27,8 +27,8 @@ class PartsService(
 
         return Parts(
             id = id,
-            id_Vehicle = form.id_Vehicle,
-            product_name = form.product_name,
+            vehicleId = form.id_Vehicle,
+            productName = form.product_name,
             price = form.price,
             image = null
         )
