@@ -6,15 +6,16 @@ import boschLogo from "../img/bosch.png";
 import kybLogo from "../img/kyb.png";
 import maybachLogo from "../img/skoda.png";
 import rrLogo from "../img/mini.png";
+import { useHref } from "react-router-dom";
 
 const AvailableParts = () => {
   const availablePartsList = [
-    { brand: "Akebono", logo: akebonoLogo },
-    { brand: "BMW", logo: bmwLogo },
-    { brand: "Bosch", logo: boschLogo },
-    { brand: "KYB", logo: kybLogo },
-    { brand: "skoda", logo: maybachLogo },
-    { brand: "mini", logo: rrLogo },
+    { brand: "Akebono", logo: akebonoLogo, url: "http://akebonobrakes.com"},
+    { brand: "BMW", logo: bmwLogo,url: "https://d-art.ppstatic.pl/kadry/k/r/7c/8b/5edbd29e8c09f_o_full.jpg" },
+    { brand: "Bosch", logo: boschLogo,url: "https://www.bosch.pl" },
+    { brand: "KYB", logo: kybLogo,url: "https://kyb-europe.com/polska/" },
+    { brand: "skoda", logo: maybachLogo,url: "https://www.skoda-auto.pl" },
+    { brand: "mini", logo: rrLogo,url: "https://www.mini.com.pl/pl_PL/home.html" },
   ];
 
   return (
@@ -31,15 +32,19 @@ const AvailableParts = () => {
 
         <div className="flex flex-wrap justify-around items-center mt-4">
           {availablePartsList.map((part, index) => (
-            <div key={index} className="m-4 w-1/3">
-              <img src={part.logo} alt={`${part.brand} logo`} className="h-32 w-full object-contain mb-2" />
-              <p>{part.brand}</p>
-            </div>
+            <a key={index} href={part.url || "#"} target="_blank" rel="noopener noreferrer" className="m-4 w-1/3">
+            <img
+              src={part.logo}
+              alt={`${part.brand} logo`}
+              className="h-32 w-full object-contain mb-2"
+            />
+            <p>{part.brand}</p>
+          </a>
           ))}
         </div>
       </div>
     </div>
   );
-};
+};``
 
-export default AvailableParts;
+export default AvailableParts; 
