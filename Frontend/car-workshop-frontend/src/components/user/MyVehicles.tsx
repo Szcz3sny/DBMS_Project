@@ -1,26 +1,59 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 
-// Sample data for vehicles, adapted to match the database schema
-const vehiclesData = [
-  {
-    vin: "1HGBH41JXMN109186", // Sample VIN
-    brand: "Honda",
-    licensePlate: "XYZ 1234",
-    yearOfProduction: 2010,
-    model: "Accord",
-  },
-  // ... you can add more vehicle data here
-];
+interface Vehicle {
+  id: number;
+  owner_id: number;
+  vin: string;
+  brand: string;
+  license_plate: string;
+  year_of_production: number;
+  model: string;
+}
 
 const MyVehicles = () => {
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+
+
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Brak tokenu");
+        return;
+      }
+
+      try {
+        const config = {
+          headers: { Authorization: `Bearer ${token}` }
+        };
+
+        const userResponse = await axios.get('https://api.bazydanych.fun/v1/user/me', config);
+        const userId = userResponse.data.id;
+
+        const vehiclesResponse = await axios.get(`https://api.bazydanych.fun/v1/user/${userId}/vehicles`, config);
+        setVehicles(vehiclesResponse.data);
+      } catch (error) {
+        console.error("Wystąpił problem podczas pobierania danych pojazdów", error);
+      }
+    };
+
+    fetchVehicles();
+  }, []);
+
+  useEffect(() => {
+    console.log("Pojazdy:", vehicles);
+  }, [vehicles]);
+
   return (
     <div>
       <div className="flex justify-center items-center h-1/5 mt-5">
@@ -33,21 +66,21 @@ const MyVehicles = () => {
         <Table className="bg-black text-white bg-opacity-80">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[200px]">VIN</TableHead>
+              <TableHead className="w-[200px]">VIN Pojazdu</TableHead>
               <TableHead>Marka</TableHead>
               <TableHead>Model</TableHead>
-              <TableHead>Tablica rejestracyjna</TableHead>
+              <TableHead>Numer rejestracyjny</TableHead>
               <TableHead>Rok produkcji</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {vehiclesData.map((vehicle, index) => (
-              <TableRow key={index}>
+            {vehicles.map((vehicle) => (
+              <TableRow key={vehicle.id}>
                 <TableCell>{vehicle.vin}</TableCell>
                 <TableCell>{vehicle.brand}</TableCell>
                 <TableCell>{vehicle.model}</TableCell>
-                <TableCell>{vehicle.licensePlate}</TableCell>
-                <TableCell>{vehicle.yearOfProduction}</TableCell>
+                <TableCell>{vehicle.license_plate}</TableCell>
+                <TableCell>{vehicle.year_of_production}</TableCell>
               </TableRow>
             ))}
           </TableBody>
