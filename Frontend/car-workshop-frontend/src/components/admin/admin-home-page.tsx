@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import warsztatImage from "../img/warsztatTło.png";
 import ChangeOfferPanel from "./change-offer-panel";
+import AddVehicle from "./add_vehicle";
 interface UserHomePageProps {
   username?: string;
 }
@@ -23,7 +24,7 @@ const AdminHomePage: React.FC<UserHomePageProps> = ({ username }) => {
       case "change-offer-panel":
         return <ChangeOfferPanel />;
       case "check-repair-status":
-        return;
+        return <AddVehicle />;
       case "calendar":
         return;
       default:
@@ -52,7 +53,7 @@ const AdminHomePage: React.FC<UserHomePageProps> = ({ username }) => {
           className={menuItemClass("check-repair-status")}
           onClick={() => setActiveComponent("check-repair-status")}
         >
-          Kolejna funkcjonalność
+          Dodaj pojazd
         </div>
         <div
           className={menuItemClass("calendar")}

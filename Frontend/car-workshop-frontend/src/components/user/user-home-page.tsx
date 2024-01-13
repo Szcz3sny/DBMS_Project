@@ -65,7 +65,7 @@ const UserHomePage: React.FC<UserHomePageProps> = ({ username }) => {
         >
           Sprawdź stan naprawy
         </div>
-         <div
+        <div
           className={menuItemClass("schedule-appointment")}
           onClick={() => setActiveComponent("schedule-appointment")}
         >
@@ -79,7 +79,6 @@ const UserHomePage: React.FC<UserHomePageProps> = ({ username }) => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div>{renderComponent()}</div>
     </div>
   );

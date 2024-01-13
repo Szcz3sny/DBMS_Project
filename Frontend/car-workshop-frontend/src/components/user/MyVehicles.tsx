@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 import {
   Table,
   TableBody,
@@ -23,7 +23,6 @@ interface Vehicle {
 const MyVehicles = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
-
   useEffect(() => {
     const fetchVehicles = async () => {
       const token = localStorage.getItem("token");
@@ -34,16 +33,25 @@ const MyVehicles = () => {
 
       try {
         const config = {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         };
 
-        const userResponse = await axios.get('https://api.bazydanych.fun/v1/user/me', config);
+        const userResponse = await axios.get(
+          "https://api.bazydanych.fun/v1/user/me",
+          config
+        );
         const userId = userResponse.data.id;
 
-        const vehiclesResponse = await axios.get(`https://api.bazydanych.fun/v1/user/${userId}/vehicles`, config);
+        const vehiclesResponse = await axios.get(
+          `https://api.bazydanych.fun/v1/user/${userId}/vehicles`,
+          config
+        );
         setVehicles(vehiclesResponse.data);
       } catch (error) {
-        console.error("Wystąpił problem podczas pobierania danych pojazdów", error);
+        console.error(
+          "Wystąpił problem podczas pobierania danych pojazdów",
+          error
+        );
       }
     };
 
