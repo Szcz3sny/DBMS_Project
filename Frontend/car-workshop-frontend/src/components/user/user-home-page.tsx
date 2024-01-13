@@ -27,6 +27,8 @@ const UserHomePage: React.FC<UserHomePageProps> = ({ username }) => {
         return <MyVehicles />;
       case "check-repair-status":
         return <CheckRepairStatus />;
+      case "schedule-appointment":
+        return <ScheduleAppointment />;
       case "calendar":
         return <UserCalendar />;
       default:
@@ -62,6 +64,12 @@ const UserHomePage: React.FC<UserHomePageProps> = ({ username }) => {
           onClick={() => setActiveComponent("check-repair-status")}
         >
           Sprawdź stan naprawy
+        </div>
+         <div
+          className={menuItemClass("schedule-appointment")}
+          onClick={() => setActiveComponent("schedule-appointment")}
+        >
+          Umów wizytę
         </div>
         <div
           className={menuItemClass("calendar")}
