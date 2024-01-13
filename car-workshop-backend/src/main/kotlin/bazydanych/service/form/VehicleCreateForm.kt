@@ -6,7 +6,6 @@ import io.konform.validation.jsonschema.maxLength
 import io.konform.validation.jsonschema.maximum
 import io.konform.validation.jsonschema.minLength
 import io.konform.validation.jsonschema.minimum
-import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
@@ -20,12 +19,12 @@ data class VehicleCreateForm(
 
 val validateVehicleCreateForm = Validation {
     VehicleCreateForm::brand {
-        minLength(5)
+        minLength(2)
         maxLength(64)
     }
 
     VehicleCreateForm::model {
-        minLength(5)
+        minLength(2)
         maxLength(64)
     }
 
