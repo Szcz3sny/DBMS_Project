@@ -69,10 +69,16 @@ const AddMeeting: React.FC = () => {
         defect: data.defect,
         status: data.status,
       };
-
+      console.log(meetingData);
       const response = await axios.post(
         `https://api.bazydanych.fun/v1/calendar`,
-        meetingData,
+        {
+          userId: data.userId,
+          vehicleId: data.vehicleId,
+          datetime: data.datetime,
+          defect: data.defect,
+          status: data.status,
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -117,6 +123,9 @@ const AddMeeting: React.FC = () => {
     <div className="flex justify-center items-center mt-10">
       <div className="w-full max-w-4xl p-6 bg-black rounded-lg shadow-xl border border-gray-700 text-white">
         <form onSubmit={handleSubmit(onSubmit)}>
+          <h2 className="text-3xl font-semibold mb-4 text-center">
+            Dodaj wizytę
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label
@@ -126,6 +135,7 @@ const AddMeeting: React.FC = () => {
                 Użytkownik
               </label>
               <select
+                {...register("userId")}
                 value={enteredUserId}
                 onChange={handleUserSelectChange}
                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
@@ -197,9 +207,9 @@ const AddMeeting: React.FC = () => {
               required
             >
               <option value="">Status</option>
-              <option value="scheduled">Umówiony</option>
-              <option value="completed">Zakończony</option>
-              <option value="cancelled">Anulowany</option>
+              <option value="Umówiony">Umówiony</option>
+              <option value="Zakończony">Zakończony</option>
+              <option value="Anulowany">Anulowany</option>
             </select>
           </div>
 

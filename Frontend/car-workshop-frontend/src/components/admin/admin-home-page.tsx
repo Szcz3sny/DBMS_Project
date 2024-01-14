@@ -4,6 +4,7 @@ import warsztatImage from "../img/warsztatTło.png";
 import ChangeOfferPanel from "./change-offer-panel";
 import AddVehicle from "./add_vehicle";
 import AddMeeting from "./add_meeting";
+import AllMeetings from "./all_meetings";
 interface UserHomePageProps {
   username?: string;
 }
@@ -28,6 +29,8 @@ const AdminHomePage: React.FC<UserHomePageProps> = ({ username }) => {
         return <AddVehicle />;
       case "add_appointment":
         return <AddMeeting />;
+      case "add_meetings":
+        return <AllMeetings />;
       default:
         return <div></div>;
     }
@@ -61,6 +64,12 @@ const AdminHomePage: React.FC<UserHomePageProps> = ({ username }) => {
           onClick={() => setActiveComponent("add_appointment")}
         >
           Umów na wizytę
+        </div>
+        <div
+          className={menuItemClass("add_meetings")}
+          onClick={() => setActiveComponent("add_meetings")}
+        >
+          Wszystkie wizyty
         </div>
       </div>
 

@@ -10,6 +10,13 @@ type VehicleFormData = {
   licensePlate: string;
 };
 
+type Vehicle = {
+  id: number;
+  brand: string;
+  model: string;
+  licensePlate: string;
+};
+
 type User = {
   id: number;
   fullName: string;
@@ -17,6 +24,7 @@ type User = {
 
 const AddVehicle: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [userVehicles, setUserVehicles] = useState<Vehicle[]>([]);
   const [error, setError] = useState("");
   const { register, handleSubmit, reset } = useForm<VehicleFormData>();
   const [selectedUserId, setSelectedUserId] = useState<number | undefined>();
@@ -37,6 +45,25 @@ const AddVehicle: React.FC = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if (selectedUserId) {
+      axios
+        .get(`https://api.bazydanych.fun/v1/user/${selectedUserId}/vehicles`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          setUserVehicles(response.data);
+        })
+        .catch((error) => {
+          setError("Error fetching vehicles: " + error.message);
+        });
+    } else {
+      setUserVehicles([]);
+    }
+  }, [selectedUserId]);
+
   const handleUserSelectChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -53,6 +80,36 @@ const AddVehicle: React.FC = () => {
     setSelectedUserId(userId ? parseInt(userId) : undefined);
   };
 
+  const handleDeleteVehicle = async (vehicleId: number) => {
+    try {
+      const response = await axios.delete(
+        `https://api.bazydanych.fun/v1/user/${selectedUserId}/vehicles/${vehicleId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        console.log("Vehicle deleted successfully", response.data);
+        // Update the state to remove the deleted vehicle
+        setUserVehicles((prevVehicles) =>
+          prevVehicles.filter((vehicle) => vehicle.id !== vehicleId)
+        );
+      } else {
+        setError(`Failed to delete vehicle: Status code ${response.status}`);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        setError(`Error: ${error.response.data.message}`);
+        console.error("Error deleting vehicle", error.response.data);
+      } else {
+        setError("An unknown error occurred");
+        console.error("Unknown error", error);
+      }
+    }
+  };
+
   const onSubmit: SubmitHandler<VehicleFormData> = async (data) => {
     if (!selectedUserId) {
       setError("Please select a user or enter a user ID.");
@@ -63,11 +120,8 @@ const AddVehicle: React.FC = () => {
       const response = await axios.post(
         `https://api.bazydanych.fun/v1/user/${selectedUserId}/vehicles`,
         {
-          brand: data.brand,
-          model: data.model,
+          ...data,
           yearOfProduction: parseInt(data.yearOfProduction),
-          vin: data.vin,
-          licensePlate: data.licensePlate,
         },
         {
           headers: {
@@ -168,6 +222,25 @@ const AddVehicle: React.FC = () => {
             Dodaj pojazd
           </button>
         </form>
+        <div className="mb-4">
+          <h3 className="text-2xl font-semibold mb-3 text-center">
+            Lista pojazdów
+          </h3>
+          {userVehicles.map((vehicle) => (
+            <div
+              key={vehicle.id}
+              className="flex justify-between items-center mb-2 bg-gray-800 rounded-md p-2"
+            >
+              <span>{`${vehicle.brand} ${vehicle.model} - ${vehicle.licensePlate}`}</span>
+              <button
+                onClick={() => handleDeleteVehicle(vehicle.id)}
+                className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded"
+              >
+                Usuń
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
