@@ -12,11 +12,11 @@ import {
 
 interface Vehicle {
   id: number;
-  owner_id: number;
+  ownerId: number;
   vin: string;
   brand: string;
-  license_plate: string;
-  year_of_production: number;
+  licensePlate: string;
+  yearOfProduction: number;
   model: string;
 }
 
@@ -46,7 +46,18 @@ const MyVehicles = () => {
           `https://api.bazydanych.fun/v1/user/${userId}/vehicles`,
           config
         );
-        setVehicles(vehiclesResponse.data);
+        
+        const adjustedVehicles = vehiclesResponse.data.map((vehicle: any) => ({
+          id: vehicle.id,
+          ownerId: vehicle.owner.id, 
+          vin: vehicle.vin,
+          brand: vehicle.brand,
+          licensePlate: vehicle.licensePlate, 
+          yearOfProduction: vehicle.yearOfProduction,
+          model: vehicle.model,
+        }));
+    
+        setVehicles(adjustedVehicles);
       } catch (error) {
         console.error(
           "Wystąpił problem podczas pobierania danych pojazdów",
@@ -87,8 +98,8 @@ const MyVehicles = () => {
                 <TableCell>{vehicle.vin}</TableCell>
                 <TableCell>{vehicle.brand}</TableCell>
                 <TableCell>{vehicle.model}</TableCell>
-                <TableCell>{vehicle.license_plate}</TableCell>
-                <TableCell>{vehicle.year_of_production}</TableCell>
+                <TableCell>{vehicle.licensePlate}</TableCell>
+                <TableCell>{vehicle.yearOfProduction}</TableCell>
               </TableRow>
             ))}
           </TableBody>
