@@ -3,6 +3,7 @@ package bazydanych.repository
 import bazydanych.model.calendar.Calendar
 import bazydanych.model.calendar.CalendarId
 import bazydanych.service.CalendarCreateDetails
+import bazydanych.model.user.UserId
 
 interface CalendarRepository {
 
@@ -15,4 +16,6 @@ interface CalendarRepository {
     suspend fun createCalendar(details: CalendarCreateDetails): CalendarId
 
     suspend fun deleteCalendar(id: CalendarId): Boolean
+
+    suspend fun findCalendarByUserId(userId: UserId): List<Calendar>
 }

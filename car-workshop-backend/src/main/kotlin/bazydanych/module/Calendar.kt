@@ -1,6 +1,7 @@
 package bazydanych.module
 
 import bazydanych.model.calendar.CalendarId
+import bazydanych.model.user.UserId
 import bazydanych.model.user.UserRole
 import bazydanych.plugins.JWTUserPrincipal
 import bazydanych.service.CalendarService
@@ -101,6 +102,17 @@ fun Application.calendarModule(
                     val calendars = calendarService.findAllCalendars()
                     call.respond(calendars)
                 }
+
+                get("/user/{userId}") {
+                    val requestedUserId = call.parameters["userId"]?.toIntOrNull()?.let { UserId(it) } ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@get
+                    }
+
+                    val calendars = calendarService.findCalendarByUserId(requestedUserId)
+                    call.respond(calendars)
+                }
+
             }
         }
     }

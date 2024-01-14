@@ -5,6 +5,7 @@ import bazydanych.repository.CalendarRepository
 import bazydanych.service.dto.CalendarView
 import bazydanych.service.form.CalendarCreateForm
 import bazydanych.service.dto.toDto
+import bazydanych.model.user.UserId
 
 
 class CalendarService(private val calendarRepository: CalendarRepository) {
@@ -32,6 +33,11 @@ class CalendarService(private val calendarRepository: CalendarRepository) {
 
     suspend fun deleteCalendar(id: CalendarId): Boolean {
         return calendarRepository.deleteCalendar(id)
+    }
+
+    suspend fun findCalendarByUserId(userId: UserId): List<CalendarView> {
+        val calendars = calendarRepository.findCalendarByUserId(userId)
+        return calendars.map { it.toDto() }
     }
 
     private fun CalendarCreateForm.toCalendarCreateDetails(): CalendarCreateDetails {

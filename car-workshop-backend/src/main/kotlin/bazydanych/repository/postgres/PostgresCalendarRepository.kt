@@ -22,6 +22,10 @@ class PostgresCalendarRepository(private val jooq: DSLContext) : CalendarReposit
         jooq.selectFrom(CalendarsTable.TABLE).where(CalendarsTable.ID.eq(id.value)).fetchOne()?.let { parse(it) }
     }
 
+    override suspend fun findCalendarByUserId(userId: UserId): List<Calendar> = withContext(Dispatchers.IO) {
+        jooq.selectFrom(CalendarsTable.TABLE).where(CalendarsTable.ID_USER.eq(userId.value)).fetch().map { parse(it) }
+    }
+
     override suspend fun findAllCalendars(): List<Calendar> = withContext(Dispatchers.IO) {
         jooq.selectFrom(CalendarsTable.TABLE).fetch().map { parse(it) }
     }
