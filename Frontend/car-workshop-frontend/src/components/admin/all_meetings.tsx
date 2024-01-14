@@ -38,13 +38,13 @@ const AllMeetings: React.FC = () => {
         ]);
 
         setMeetings(meetingsResponse.data);
-        console.log("Meetings data:", meetingsResponse.data);
+        console.log("Spotkania:", meetingsResponse.data);
         setUsers(usersResponse.data);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           setError(error.message);
         } else {
-          setError("An unexpected error occurred");
+          setError("Błąd");
         }
       }
     };
@@ -64,26 +64,26 @@ const AllMeetings: React.FC = () => {
       );
 
       if (response.status === 200 || response.status === 204) {
-        console.log("Meeting deleted successfully");
+        console.log("Spotkanie zostało pomyślnie usunięte");
         setMeetings(meetings.filter((meeting) => meeting.id !== meetingId));
       } else {
-        setError(`Failed to delete meeting: Status code ${response.status}`);
+        setError(`Błąd podczas usuwania spotkania: Kod błędu ${response.status}`);
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        setError(`Error: ${error.response.data.message}`);
+        setError(`Błąd: ${error.response.data.message}`);
       } else {
-        setError("An unknown error occurred");
+        setError("Nastąpił nieznany błąd");
       }
     }
   };
 
   const getUserNameById = (userId: number): string => {
-    console.log("Searching for user ID:", userId);
-    console.log("Current users array:", users);
+    console.log("SWyszukiwanie ID użytkownika:", userId);
+    console.log("Aktualni użytkownicy:", users);
     const user = users.find((u) => u.id === userId);
-    console.log("Found user:", user);
-    return user ? user.fullName : "Unknown User";
+    console.log("Znalezniono użytkownika:", user);
+    return user ? user.fullName : "Nieznany użytkownik";
   };
 
   return (
@@ -107,7 +107,7 @@ const AllMeetings: React.FC = () => {
                 onClick={() => handleDeleteMeeting(meeting.id)}
                 className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
-                Delete
+                Usuń
               </button>
             </li>
           ))}
