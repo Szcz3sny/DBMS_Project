@@ -39,7 +39,7 @@ const AddMeeting: React.FC = () => {
         setUsers(response.data);
       })
       .catch((error) => {
-        setError("Error fetching users: " + error.message);
+        setError("Błąd przy pobieraniu użytkowników: " + error.message);
       });
   }, []);
 
@@ -55,7 +55,7 @@ const AddMeeting: React.FC = () => {
           setVehicles(response.data);
         })
         .catch((error) => {
-          setError("Error fetching vehicles: " + error.message);
+          setError("Błąd przy pobieraniu pojazdów: " + error.message);
         });
     }
   }, [selectedUserId]);
@@ -87,18 +87,18 @@ const AddMeeting: React.FC = () => {
       );
 
       if (response.status === 201) {
-        console.log("Meeting added successfully", response.data);
+        console.log("Spotkanie zostało dodane", response.data);
         reset();
       } else {
-        setError(`Failed to add meeting: Status code ${response.status}`);
+        setError(`Błąd podczas dodawania spotkania: Kod błędu ${response.status}`);
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        setError(`Error: ${error.response.data.message}`);
-        console.error("Error adding meeting", error.response.data);
+        setError(`Błąd: ${error.response.data.message}`);
+        console.error("Błąd podczas dodawania spotkania", error.response.data);
       } else {
-        setError("An unknown error occurred");
-        console.error("Unknown error", error);
+        setError("Wystąpił nienznany błąd");
+        console.error("Nieznany błąd", error);
       }
     }
   };
@@ -153,7 +153,7 @@ const AddMeeting: React.FC = () => {
                 value={enteredUserId}
                 onChange={handleUserIdInputChange}
                 className="mt-4 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
-                placeholder="Or enter user ID"
+                placeholder="Lub wpisz ID użytkownika"
               />
             </div>
 
@@ -190,7 +190,7 @@ const AddMeeting: React.FC = () => {
             <input
               {...register("defect")}
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md bg-gray-700 text-white"
-              placeholder="Usterka"
+              placeholder="Opis usterki"
               required
             />
           </div>
