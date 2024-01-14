@@ -41,7 +41,7 @@ const AddVehicle: React.FC = () => {
         setUsers(response.data);
       })
       .catch((error) => {
-        setError("Error fetching users: " + error.message);
+        setError("Błąd przy pobieraniu uzytkowników: " + error.message);
       });
   }, []);
 
@@ -57,7 +57,7 @@ const AddVehicle: React.FC = () => {
           setUserVehicles(response.data);
         })
         .catch((error) => {
-          setError("Error fetching vehicles: " + error.message);
+          setError("Błąd przy pobieraniu pojazdów:: " + error.message);
         });
     } else {
       setUserVehicles([]);
@@ -91,28 +91,27 @@ const AddVehicle: React.FC = () => {
         }
       );
       if (response.status === 200) {
-        console.log("Vehicle deleted successfully", response.data);
-        // Update the state to remove the deleted vehicle
+        console.log("Pojazd pomyślnie usunięty", response.data);
         setUserVehicles((prevVehicles) =>
           prevVehicles.filter((vehicle) => vehicle.id !== vehicleId)
         );
       } else {
-        setError(`Failed to delete vehicle: Status code ${response.status}`);
+        setError(`Błąd podczas usuwania pojazdu: Kod błędu ${response.status}`);
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        setError(`Error: ${error.response.data.message}`);
-        console.error("Error deleting vehicle", error.response.data);
+        setError(`Błąd: ${error.response.data.message}`);
+        console.error("Błąd podczas usuwania pojazdu", error.response.data);
       } else {
-        setError("An unknown error occurred");
-        console.error("Unknown error", error);
+        setError("Wystąpił nieznany błąd");
+        console.error("Nieznany błąd", error);
       }
     }
   };
 
   const onSubmit: SubmitHandler<VehicleFormData> = async (data) => {
     if (!selectedUserId) {
-      setError("Please select a user or enter a user ID.");
+      setError("Proszę wybrać użytkownika lub wpisac ID użytkownika.");
       return;
     }
 
@@ -131,20 +130,20 @@ const AddVehicle: React.FC = () => {
       );
 
       if (response.status === 201) {
-        console.log("Vehicle added successfully", response.data);
+        console.log("Pojazd został pomyślnie dodany", response.data);
         reset();
         setEnteredUserId("");
         setSelectedUserId(undefined);
       } else {
-        setError(`Failed to add vehicle: Status code ${response.status}`);
+        setError(`Nie udało się dodać pojazdu: Kod statusu ${response.status}`);
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        setError(`Error: ${error.response.data.message}`);
-        console.error("Error adding vehicle", error.response.data);
+        setError(`Błąd: ${error.response.data.message}`);
+        console.error("Błąd podczas dodawania pojazdu", error.response.data);
       } else {
-        setError("An unknown error occurred");
-        console.error("Unknown error", error);
+        setError("Wystąpił nieznany błąd");
+        console.error("Nieznany błąd", error);
       }
     }
   };
@@ -179,7 +178,7 @@ const AddVehicle: React.FC = () => {
               value={enteredUserId}
               onChange={handleUserIdInputChange}
               className="mt-4 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
-              placeholder="Or enter user ID"
+              placeholder="Lub wpisz ID użytkownika"
             />
           </div>
           <div className="flex flex-wrap gap-4">
