@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CheckRepairStatus from "./CheckRepairStatus";
 import MyVehicles from "./MyVehicles";
-import ScheduleAppointment from "./ScheduleAppointment";
 import UserCalendar from "./UserCalendar";
 import warsztatImage from "../img/warsztatTło.png";
 
@@ -9,10 +8,19 @@ interface UserHomePageProps {
   username?: string;
 }
 
-const UserHomePage: React.FC<UserHomePageProps> = ({ username }) => {
+const UserHomePage: React.FC<UserHomePageProps> = () => {
   const [activeComponent, setActiveComponent] = useState<string>("");
+  const [username, setUsername] = useState<string>("Gość"); 
 
   const isActive = (componentName: string) => activeComponent === componentName;
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
+
 
   const menuItemClass = (componentName: string) =>
     `cursor-pointer p-2 md:p-4 ${
@@ -27,8 +35,6 @@ const UserHomePage: React.FC<UserHomePageProps> = ({ username }) => {
         return <MyVehicles />;
       case "check-repair-status":
         return <CheckRepairStatus />;
-      case "schedule-appointment":
-        return <ScheduleAppointment />;
       case "calendar":
         return <UserCalendar />;
       default:
@@ -64,12 +70,6 @@ const UserHomePage: React.FC<UserHomePageProps> = ({ username }) => {
           onClick={() => setActiveComponent("check-repair-status")}
         >
           Sprawdź stan naprawy
-        </div>
-        <div
-          className={menuItemClass("schedule-appointment")}
-          onClick={() => setActiveComponent("schedule-appointment")}
-        >
-          Umów wizytę
         </div>
         <div
           className={menuItemClass("calendar")}
