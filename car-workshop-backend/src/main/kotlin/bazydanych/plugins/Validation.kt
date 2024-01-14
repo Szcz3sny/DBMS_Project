@@ -6,7 +6,10 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.MissingFieldException
 
+@OptIn(ExperimentalSerializationApi::class)
 fun Application.configureValidation() {
     install(RequestValidation) {
         validate<UserLoginForm> {
@@ -33,6 +36,10 @@ fun Application.configureValidation() {
     install(StatusPages) {
         exception<RequestValidationException> { call, cause ->
             call.respond(HttpStatusCode.BadRequest, cause.reasons.joinToString())
+        }
+
+        exception<MissingFieldException> { call, cause ->
+            call.respond(HttpStatusCode.BadRequest, cause.message ?: "Missing field")
         }
     }
 }
