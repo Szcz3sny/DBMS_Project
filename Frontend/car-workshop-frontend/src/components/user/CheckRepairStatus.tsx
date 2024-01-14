@@ -1,24 +1,64 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-//suche dane
-const repairsData = [
-  {
-    vin: "1HGBH41JXMN109186", // to ukradniemy z pojazdu po id
-    description: "Wymiana opon",
-    status: "Completed",
-    price: 250.0,
-  },
-];
+
+interface Repair {
+  id: number;
+  vehicleId: number;
+  description: string;
+  status: string;
+  price: number;
+}
 
 const CheckRepairStatus = () => {
+  const [repairs, setRepairs] = useState<Repair[]>([]);
+
+  useEffect(() => {
+    const fetchRepairs = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Brak tokenu");
+        return;
+      }
+
+      try {
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
+
+        const userResponse = await axios.get(
+          "https://api.bazydanych.fun/v1/user/me",
+          config
+        );
+        const userId = userResponse.data.id;
+
+        const vehiclesResponse = await axios.get(
+          `https://api.bazydanych.fun/v1/user/${userId}/vehicles`,
+          config
+        );
+
+        const repairsPromises = vehiclesResponse.data.map((vehicle: any) =>
+          axios.get(`https://api.bazydanych.fun/v1/repairs/vehicle/${vehicle.id}`, config)
+        );
+
+        const repairsResponses = await Promise.all(repairsPromises);
+        const repairsData = repairsResponses.flatMap(response => response.data);
+
+        setRepairs(repairsData);
+      } catch (error) {
+        console.error("Wystąpił problem podczas pobierania danych o naprawach", error);
+      }
+    };
+
+    fetchRepairs();
+  }, []);
   return (
     <div>
       <div className="flex justify-center items-center h-1/5 mt-5">
@@ -38,9 +78,9 @@ const CheckRepairStatus = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {repairsData.map((repair, index) => (
-              <TableRow key={index}>
-                <TableCell>{repair.vin}</TableCell>
+            {repairs.map((repair) => (
+              <TableRow key={repair.id}>
+                <TableCell>{repair.vehicleId}</TableCell>
                 <TableCell>{repair.description}</TableCell>
                 <TableCell>{repair.status}</TableCell>
                 <TableCell>{`${repair.price.toFixed(2)} zł`}</TableCell>
