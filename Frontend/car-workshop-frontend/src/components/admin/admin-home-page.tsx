@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import warsztatImage from "../img/warsztatTło.png";
 import ChangeOfferPanel from "./change-offer-panel";
 import AddVehicle from "./add_vehicle";
-import AddMeeting from "./add_appointment";
+import AddMeeting from "./add_meeting";
 interface UserHomePageProps {
   username?: string;
 }

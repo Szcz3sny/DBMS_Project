@@ -4,7 +4,7 @@ import axios from "axios";
 
 type User = {
   id: number;
-  name: string;
+  fullName: string;
 };
 
 type Vehicle = {
@@ -17,6 +17,7 @@ type MeetingFormData = {
   vehicleId: number;
   datetime: string;
   defect: string;
+  status: string;
 };
 
 const AddMeeting: React.FC = () => {
@@ -25,10 +26,15 @@ const AddMeeting: React.FC = () => {
   const [error, setError] = useState("");
   const { register, handleSubmit, reset, watch } = useForm<MeetingFormData>();
   const [selectedUserId, setSelectedUserId] = useState<number | undefined>();
+  const [enteredUserId, setEnteredUserId] = useState<string>("");
 
   useEffect(() => {
     axios
-      .get("https://api.bazydanych.fun/v1/user")
+      .get("https://api.bazydanych.fun/v1/user/names", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then((response) => {
         setUsers(response.data);
       })
@@ -40,7 +46,11 @@ const AddMeeting: React.FC = () => {
   useEffect(() => {
     if (selectedUserId) {
       axios
-        .get(`https://api.bazydanych.fun/v1/user/${selectedUserId}/vehicles`)
+        .get(`https://api.bazydanych.fun/v1/user/${selectedUserId}/vehicles`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
         .then((response) => {
           setVehicles(response.data);
         })
@@ -57,6 +67,7 @@ const AddMeeting: React.FC = () => {
         vehicleId: data.vehicleId,
         datetime: data.datetime,
         defect: data.defect,
+        status: data.status,
       };
 
       const response = await axios.post(
@@ -86,10 +97,25 @@ const AddMeeting: React.FC = () => {
     }
   };
 
+  const handleUserSelectChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const userId = event.target.value;
+    setSelectedUserId(userId ? parseInt(userId) : undefined);
+    setEnteredUserId(userId);
+  };
+
+  const handleUserIdInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const userId = event.target.value;
+    setEnteredUserId(userId);
+    setSelectedUserId(userId ? parseInt(userId) : undefined);
+  };
+
   return (
     <div className="flex justify-center items-center mt-10">
       <div className="w-full max-w-4xl p-6 bg-black rounded-lg shadow-xl border border-gray-700 text-white">
-        {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
@@ -100,20 +126,25 @@ const AddMeeting: React.FC = () => {
                 Użytkownik
               </label>
               <select
-                {...register("userId")}
-                onChange={(e) => {
-                  setVehicles([]);
-                  setSelectedUserId(parseInt(e.target.value));
-                }}
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md bg-gray-700 text-white"
+                value={enteredUserId}
+                onChange={handleUserSelectChange}
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
+                required
               >
                 <option value="">Wybierz użytkownika</option>
                 {users.map((user) => (
                   <option key={user.id} value={user.id}>
-                    {user.name}
+                    {user.fullName}
                   </option>
                 ))}
               </select>
+              <input
+                type="text"
+                value={enteredUserId}
+                onChange={handleUserIdInputChange}
+                className="mt-4 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
+                placeholder="Or enter user ID"
+              />
             </div>
 
             <div>
@@ -152,6 +183,24 @@ const AddMeeting: React.FC = () => {
               placeholder="Usterka"
               required
             />
+          </div>
+          <div>
+            <label
+              htmlFor="status"
+              className="block text-sm font-medium text-gray-300"
+            >
+              Status
+            </label>
+            <select
+              {...register("status")}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
+              required
+            >
+              <option value="">Status</option>
+              <option value="scheduled">Umówiony</option>
+              <option value="completed">Zakończony</option>
+              <option value="cancelled">Anulowany</option>
+            </select>
           </div>
 
           <button

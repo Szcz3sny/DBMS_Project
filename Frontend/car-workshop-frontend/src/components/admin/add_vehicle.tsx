@@ -3,7 +3,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 
 type VehicleFormData = {
-  userId: string;
   brand: string;
   model: string;
   yearOfProduction: string;
@@ -13,17 +12,23 @@ type VehicleFormData = {
 
 type User = {
   id: number;
-  name: string;
+  fullName: string;
 };
 
 const AddVehicle: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState("");
   const { register, handleSubmit, reset } = useForm<VehicleFormData>();
+  const [selectedUserId, setSelectedUserId] = useState<number | undefined>();
+  const [enteredUserId, setEnteredUserId] = useState<string>("");
 
   useEffect(() => {
     axios
-      .get("https://api.bazydanych.fun/v1/user")
+      .get("https://api.bazydanych.fun/v1/user/names", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then((response) => {
         setUsers(response.data);
       })
@@ -32,14 +37,36 @@ const AddVehicle: React.FC = () => {
       });
   }, []);
 
+  const handleUserSelectChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const userId = event.target.value;
+    setSelectedUserId(userId ? parseInt(userId) : undefined);
+    setEnteredUserId(userId);
+  };
+
+  const handleUserIdInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const userId = event.target.value;
+    setEnteredUserId(userId);
+    setSelectedUserId(userId ? parseInt(userId) : undefined);
+  };
+
   const onSubmit: SubmitHandler<VehicleFormData> = async (data) => {
+    if (!selectedUserId) {
+      setError("Please select a user or enter a user ID.");
+      return;
+    }
+
     try {
       const response = await axios.post(
-        `https://api.bazydanych.fun/v1/user/${data.userId}/vehicles`,
+        `https://api.bazydanych.fun/v1/user/${selectedUserId}/vehicles`,
         {
           brand: data.brand,
           model: data.model,
           yearOfProduction: parseInt(data.yearOfProduction),
+          vin: data.vin,
           licensePlate: data.licensePlate,
         },
         {
@@ -49,16 +76,18 @@ const AddVehicle: React.FC = () => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         console.log("Vehicle added successfully", response.data);
         reset();
+        setEnteredUserId("");
+        setSelectedUserId(undefined);
       } else {
         setError(`Failed to add vehicle: Status code ${response.status}`);
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setError(`Error: ${error.response?.data.message}`);
-        console.error("Error adding vehicle", error.response?.data);
+      if (axios.isAxiosError(error) && error.response) {
+        setError(`Error: ${error.response.data.message}`);
+        console.error("Error adding vehicle", error.response.data);
       } else {
         setError("An unknown error occurred");
         console.error("Unknown error", error);
@@ -79,17 +108,25 @@ const AddVehicle: React.FC = () => {
               Użytkownik
             </label>
             <select
-              {...register("userId")}
+              value={enteredUserId}
+              onChange={handleUserSelectChange}
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
               required
             >
               <option value="">Wybierz użytkownika</option>
               {users.map((user) => (
                 <option key={user.id} value={user.id}>
-                  {user.name}
+                  {user.fullName}
                 </option>
               ))}
             </select>
+            <input
+              type="text"
+              value={enteredUserId}
+              onChange={handleUserIdInputChange}
+              className="mt-4 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
+              placeholder="Or enter user ID"
+            />
           </div>
           <div className="flex flex-wrap gap-4">
             <input
