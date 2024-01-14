@@ -38,6 +38,8 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       );
       const token = response.data.token;
       localStorage.setItem("token", token);
+      localStorage.setItem("username", data.username);
+      
       setLoginError("");
       reset();
       onLoginSuccess(data.username);
