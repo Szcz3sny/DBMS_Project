@@ -2,28 +2,26 @@ import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 
-type VehicleFormData = {
+type MeetingFormData = {
   userId: string;
-  brand: string;
-  model: string;
-  yearOfProduction: string;
-  vin: string;
-  licensePlate: string;
+  vehicleId: string;
+  datetime: string;
+  defect: string;
 };
 
-const AddVehicle: React.FC = () => {
+const AddMeeting: React.FC = () => {
   const [error, setError] = useState("");
-  const { register, handleSubmit, reset } = useForm<VehicleFormData>();
+  const { register, handleSubmit, reset } = useForm<MeetingFormData>();
 
-  const onSubmit: SubmitHandler<VehicleFormData> = async (data) => {
+  const onSubmit: SubmitHandler<MeetingFormData> = async (data) => {
     try {
       const response = await axios.post(
-        `https://api.bazydanych.fun/v1/user/${data.userId}/vehicles`,
+        `https://api.bazydanych.fun/v1/calendar`,
         {
-          brand: data.brand,
-          model: data.model,
-          yearOfProduction: parseInt(data.yearOfProduction),
-          licensePlate: data.licensePlate,
+          userId: parseInt(data.userId),
+          vehicleId: parseInt(data.vehicleId),
+          datetime: data.datetime,
+          defect: data.defect,
         },
         {
           headers: {
@@ -33,15 +31,15 @@ const AddVehicle: React.FC = () => {
       );
 
       if (response.status === 200) {
-        console.log("Vehicle added successfully", response.data);
+        console.log("Meeting added successfully", response.data);
         reset();
       } else {
-        setError(`Failed to add vehicle: Status code ${response.status}`);
+        setError(`Failed to add meeting: Status code ${response.status}`);
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setError(`Error: ${error.response?.data.message}`);
-        console.error("Error adding vehicle", error.response?.data);
+        console.error("Error adding meeting", error.response?.data);
       } else {
         setError("An unknown error occurred");
         console.error("Unknown error", error);
@@ -53,11 +51,11 @@ const AddVehicle: React.FC = () => {
     <div className="flex justify-center items-center mt-10">
       <div className="w-full max-w-4xl p-6 bg-black rounded-lg shadow-xl border border-gray-700">
         <h2 className="text-3xl font-semibold mb-4 text-center text-white">
-          Dodaj pojazd
+          Dodaj spotkanie
         </h2>
         <form onSubmit={handleSubmit(onSubmit)} className="mb-8">
           <h3 className="text-2xl font-semibold mb-4 text-white">
-            Wpisz dane pojazdu
+            Wpisz dane spotkania
           </h3>
           <div className="flex flex-wrap gap-4 mb-4">
             <input
@@ -67,40 +65,28 @@ const AddVehicle: React.FC = () => {
               required
             />
             <input
-              {...register("brand")}
+              {...register("vehicleId")}
               className="flex-grow p-2 rounded border border-gray-600 text-black"
-              placeholder="Brand"
+              placeholder="Vehicle ID"
               required
             />
             <input
-              {...register("model")}
+              {...register("datetime")}
               className="flex-grow p-2 rounded border border-gray-600 text-black"
-              placeholder="Model"
+              placeholder="Datetime (YYYY-MM-DD HH:MM)"
               required
             />
             <input
-              {...register("yearOfProduction")}
+              {...register("defect")}
               className="flex-grow p-2 rounded border border-gray-600 text-black"
-              placeholder="Year of Production"
-              required
-            />
-            <input
-              {...register("vin")}
-              className="flex-grow p-2 rounded border border-gray-600 text-black"
-              placeholder="VIN"
-              required
-            />
-            <input
-              {...register("licensePlate")}
-              className="flex-grow p-2 rounded border border-gray-600 text-black"
-              placeholder="License Plate"
+              placeholder="Defect"
               required
             />
             <button
               className="bg-green-800 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
               type="submit"
             >
-              Dodaj pojazd
+              Dodaj spotkanie
             </button>
           </div>
         </form>
@@ -109,4 +95,4 @@ const AddVehicle: React.FC = () => {
   );
 };
 
-export default AddVehicle;
+export default AddMeeting;

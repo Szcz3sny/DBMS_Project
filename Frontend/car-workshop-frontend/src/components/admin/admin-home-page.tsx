@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import warsztatImage from "../img/warsztatTło.png";
 import ChangeOfferPanel from "./change-offer-panel";
 import AddVehicle from "./add_vehicle";
+import AddMeeting from "./add_appointment";
 interface UserHomePageProps {
   username?: string;
 }
@@ -25,8 +26,8 @@ const AdminHomePage: React.FC<UserHomePageProps> = ({ username }) => {
         return <ChangeOfferPanel />;
       case "check-repair-status":
         return <AddVehicle />;
-      case "calendar":
-        return;
+      case "add_appointment":
+        return <AddMeeting />;
       default:
         return <div></div>;
     }
@@ -56,10 +57,10 @@ const AdminHomePage: React.FC<UserHomePageProps> = ({ username }) => {
           Dodaj pojazd
         </div>
         <div
-          className={menuItemClass("calendar")}
-          onClick={() => setActiveComponent("calendar")}
+          className={menuItemClass("add_appointment")}
+          onClick={() => setActiveComponent("add_appointment")}
         >
-          Kolejna funkcjonalność
+          Umów na wizytę
         </div>
       </div>
 
