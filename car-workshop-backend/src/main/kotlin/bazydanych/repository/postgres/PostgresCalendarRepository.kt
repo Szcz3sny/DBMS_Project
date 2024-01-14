@@ -1,5 +1,6 @@
 package bazydanych.repository.postgres
 
+import bazydanych.model.VehicleId
 import bazydanych.service.CalendarCreateDetails
 import bazydanych.repository.CalendarRepository
 import kotlinx.coroutines.withContext
@@ -7,6 +8,7 @@ import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import bazydanych.model.calendar.Calendar
 import bazydanych.model.calendar.CalendarId
+import bazydanych.model.user.UserId
 import bazydanych.repository.table.CalendarsTable
 
 import kotlinx.coroutines.Dispatchers
@@ -65,8 +67,8 @@ class PostgresCalendarRepository(private val jooq: DSLContext) : CalendarReposit
         return it!!.let {
             Calendar(
                 id = CalendarId(it.getValue(CalendarsTable.ID)),
-                vehicleId = it.getValue(CalendarsTable.ID_VEHICLE),
-                userId = it.getValue(CalendarsTable.ID_USER),
+                vehicleId = VehicleId(it.getValue(CalendarsTable.ID_VEHICLE)),
+                userId = UserId(it.getValue(CalendarsTable.ID_USER)),
                 datetime = it.get(CalendarsTable.DATETIME, Timestamp::class.java)
                     .toLocalDateTime()
                     .toKotlinLocalDateTime(),
