@@ -90,7 +90,7 @@ const AllMeetings: React.FC = () => {
     <div className="flex justify-center items-center mt-10">
       <div className="w-full max-w-4xl p-6 rounded-lg shadow-xl border border-gray-700 bg-black  text-white">
         <h2 className="text-3xl font-semibold mb-4 text-center">
-          All Meetings
+          Wszystkie spotkania
         </h2>
         {error && <p className="text-red-500">{error}</p>}
         <ul>
