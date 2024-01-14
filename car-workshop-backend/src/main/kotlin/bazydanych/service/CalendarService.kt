@@ -36,7 +36,6 @@ class CalendarService(private val calendarRepository: CalendarRepository) {
 
     private fun CalendarCreateForm.toCalendarCreateDetails(): CalendarCreateDetails {
         return CalendarCreateDetails(
-            id = this.id,
             vehicleId = this.vehicleId,
             userId = this.userId,
             datetime = this.datetime,
