@@ -72,6 +72,18 @@ fun Application.userModule(userService: UserService) {
                     }
                 }
 
+                get("/names") {
+                    val principal: JWTUserPrincipal =
+                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
+
+                    if (principal.user.role == UserRole.GUEST) {
+                        call.respond(HttpStatusCode.Forbidden)
+                    } else {
+                        call.respond(userService.getAllNamesWithIds()
+                            .map { (id, name) -> UserIdWithNameEntry(id, name) })
+                    }
+                }
+
                 get("/me") {
                     val principal: JWTUserPrincipal =
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
@@ -92,3 +104,6 @@ fun Application.userModule(userService: UserService) {
 
 @Serializable
 class UserCreationResponse(val id: UserId, val login: String, val password: String)
+
+@Serializable
+class UserIdWithNameEntry(val id: UserId, val fullName: String)

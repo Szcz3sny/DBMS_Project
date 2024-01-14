@@ -21,6 +21,13 @@ class PostgresUserRepository(private val jooq: DSLContext) : UserRepository {
         jooq.selectFrom(UsersTable.TABLE.where(UsersTable.LOGIN.eq(login))).fetchOne { parse(it) }
     }
 
+    override suspend fun findAllNamesWithIds(): List<Pair<UserId, String>> = withContext(Dispatchers.IO) {
+        jooq.select(UsersTable.ID, UsersTable.NAME, UsersTable.SURNAME).from(UsersTable.TABLE).fetch {
+            UserId(it.getValue(UsersTable.ID)) to
+                    "${it.getValue(UsersTable.NAME)} ${it.getValue(UsersTable.SURNAME)}"
+        }
+    }
+
     override suspend fun existsByLogin(login: String): Boolean = withContext(Dispatchers.IO) {
         jooq.fetchExists(UsersTable.TABLE.where(UsersTable.LOGIN.eq(login)))
     }

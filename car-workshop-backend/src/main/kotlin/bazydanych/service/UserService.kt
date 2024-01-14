@@ -49,6 +49,10 @@ class UserService(
         return userRepository.delete(id)
     }
 
+    suspend fun getAllNamesWithIds(): List<Pair<UserId, String>> {
+        return userRepository.findAllNamesWithIds()
+    }
+
     suspend fun login(form: UserLoginForm): Pair<User, String>? {
         return userRepository.findUserByLogin(form.login)?.let {
             if (Password.check(form.password, it.password).withArgon2()) {

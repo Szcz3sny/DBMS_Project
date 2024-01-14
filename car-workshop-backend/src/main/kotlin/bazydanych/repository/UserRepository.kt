@@ -10,6 +10,8 @@ interface UserRepository {
 
     suspend fun findUserByLogin(login: String): User?
 
+    suspend fun findAllNamesWithIds(): List<Pair<UserId, String>>
+
     suspend fun existsByLogin(login: String): Boolean
 
     suspend fun insert(details: UserCreateDetails): User
