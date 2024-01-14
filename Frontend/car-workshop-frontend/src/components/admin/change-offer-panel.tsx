@@ -78,7 +78,7 @@ export default function ChangeOfferPanel() {
           </h3>
           <div className="flex flex-wrap gap-4 mb-4">
             <input
-              className="flex-grow p-2 rounded border border-gray-600 text-black"
+              className="flex-grow p-2 rounded border border-gray-600 bg-gray-700 text-white"
               type="text"
               name="name"
               value={formData.name}
@@ -86,7 +86,7 @@ export default function ChangeOfferPanel() {
               placeholder="Nazwa usterki"
             />
             <input
-              className="flex-grow p-2 rounded border border-gray-600 text-black"
+              className="flex-grow p-2 rounded border border-gray-600 bg-gray-700 text-white"
               type="text"
               name="description"
               value={formData.description}
@@ -94,7 +94,7 @@ export default function ChangeOfferPanel() {
               placeholder="Opis"
             />
             <input
-              className="flex-grow p-2 rounded border border-gray-600 text-black"
+              className="flex-grow p-2 rounded border border-gray-600 bg-gray-700 text-white"
               type="text"
               name="price"
               value={formData.price}
@@ -102,7 +102,7 @@ export default function ChangeOfferPanel() {
               placeholder="Cena"
             />
             <button
-              className="bg-green-800 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
+              className=" w-full inline-flex font-bold justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-800 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               onClick={addOffer}
             >
               Dodaj

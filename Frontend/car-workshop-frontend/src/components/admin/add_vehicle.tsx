@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 
@@ -11,9 +11,26 @@ type VehicleFormData = {
   licensePlate: string;
 };
 
+type User = {
+  id: number;
+  name: string;
+};
+
 const AddVehicle: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState("");
   const { register, handleSubmit, reset } = useForm<VehicleFormData>();
+
+  useEffect(() => {
+    axios
+      .get("https://api.bazydanych.fun/v1/user")
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((error) => {
+        setError("Error fetching users: " + error.message);
+      });
+  }, []);
 
   const onSubmit: SubmitHandler<VehicleFormData> = async (data) => {
     try {
@@ -51,58 +68,68 @@ const AddVehicle: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center mt-10">
-      <div className="w-full max-w-4xl p-6 bg-black rounded-lg shadow-xl border border-gray-700">
-        <h2 className="text-3xl font-semibold mb-4 text-center text-white">
-          Dodaj pojazd
-        </h2>
+      <div className="w-full max-w-4xl p-6 bg-black rounded-lg shadow-xl border border-gray-700 text-white">
+        {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit(onSubmit)} className="mb-8">
-          <h3 className="text-2xl font-semibold mb-4 text-white">
-            Wpisz dane pojazdu
-          </h3>
-          <div className="flex flex-wrap gap-4 mb-4">
-            <input
+          <h2 className="text-3xl font-semibold mb-4 text-center">
+            Dodaj pojazd
+          </h2>
+          <div className="mb-4">
+            <label htmlFor="userId" className="block text-sm font-medium">
+              Użytkownik
+            </label>
+            <select
               {...register("userId")}
-              className="flex-grow p-2 rounded border border-gray-600 text-black"
-              placeholder="User ID"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
               required
-            />
+            >
+              <option value="">Wybierz użytkownika</option>
+              {users.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-wrap gap-4">
             <input
               {...register("brand")}
-              className="flex-grow p-2 rounded border border-gray-600 text-black"
-              placeholder="Brand"
+              className="flex-grow p-2 rounded border border-gray-600 bg-gray-700 text-white"
+              placeholder="Marka"
               required
             />
             <input
               {...register("model")}
-              className="flex-grow p-2 rounded border border-gray-600 text-black"
+              className="flex-grow p-2 rounded border border-gray-600 bg-gray-700 text-white"
               placeholder="Model"
               required
             />
             <input
               {...register("yearOfProduction")}
-              className="flex-grow p-2 rounded border border-gray-600 text-black"
-              placeholder="Year of Production"
+              type="number"
+              className="flex-grow p-2 rounded border border-gray-600 bg-gray-700 text-white"
+              placeholder="Rok produkcji"
               required
             />
             <input
               {...register("vin")}
-              className="flex-grow p-2 rounded border border-gray-600 text-black"
+              className="flex-grow p-2 rounded border border-gray-600 bg-gray-700 text-white"
               placeholder="VIN"
               required
             />
             <input
               {...register("licensePlate")}
-              className="flex-grow p-2 rounded border border-gray-600 text-black"
-              placeholder="License Plate"
+              className="flex-grow p-2 rounded border border-gray-600 bg-gray-700 text-white"
+              placeholder="Tablica rejestracyjna"
               required
             />
-            <button
-              className="bg-green-800 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
-              type="submit"
-            >
-              Dodaj pojazd
-            </button>
           </div>
+          <button
+            type="submit"
+            className="mt-4 font-bold w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-800 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          >
+            Dodaj pojazd
+          </button>
         </form>
       </div>
     </div>
