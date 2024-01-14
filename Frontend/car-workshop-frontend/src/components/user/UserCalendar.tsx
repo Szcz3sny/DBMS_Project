@@ -1,25 +1,58 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Calendar } from "@/components/ui/calendar";
-import { useState } from "react";
 
-//import warsztatImage from "./img/warsztatTło.png";
-//Na razie suche dane bo nie mamy jeszcze zrobionego
-const visitsData = [
-  { date: "2023-12-28", description: "Zmiana oleju", price: "100.00" },
-  { date: "2024-01-15", description: "Sprawdzenie hamulców", price: "250.00" },
-  { date: "2024-02-20", description: "Zmiana opon", price: "800.00" },
-];
+interface Visit {
+  id: number;
+  userId: number;
+  vehicleId: number;
+  datetime: string;
+  defect: string;
+  status: string;
+}
 
 const CheckVisits = () => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [visits, setVisits] = useState<Visit[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+useEffect(() => {
+  const fetchVisits = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Brak tokena autoryzacyjnego");
+        return;
+      }
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const userResponse = await axios.get("https://api.bazydanych.fun/v1/user/me", config);
+      const userId = userResponse.data.id;
+
+      const visitsResponse = await axios.get(`https://api.bazydanych.fun/v1/calendar/user/${userId}`, config);
+
+      setVisits(visitsResponse.data);
+    } catch (error) {
+      console.error(
+        "łąd podczas pobierania danych: ",
+        error
+      );
+    }
+  };
+
+  fetchVisits();
+
+  }, []);
   return (
     <div>
       <div className="flex justify-center items-center h-1/5 mt-5">
@@ -36,13 +69,15 @@ const CheckVisits = () => {
             <TableRow>
               <TableHead className="w-[200px]">Termin</TableHead>
               <TableHead>Opis</TableHead>
+              <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {visitsData.map((visit, index) => (
+            {visits.map((visit, index) => (
               <TableRow key={index}>
-                <TableCell>{visit.date}</TableCell>
-                <TableCell>{visit.description}</TableCell>
+                <TableCell>{visit.datetime}</TableCell>
+                <TableCell>{visit.defect}</TableCell>
+                <TableCell>{visit.status}</TableCell>
               </TableRow>
             ))}
           </TableBody>
