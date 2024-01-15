@@ -12,6 +12,6 @@ object UsersTable {
     val SURNAME = DSL.field("surname", SQLDataType.VARCHAR(64))
     val PHONE_NUMBER = DSL.field("phone_number", SQLDataType.VARCHAR(16))
     val LOGIN = DSL.field("login", SQLDataType.VARCHAR(64))
-    val PASSWORD = DSL.field("password", SQLDataType.VARCHAR(256))
+    val PASSWORD = DSL.field("password_hash", SQLDataType.VARCHAR(256))
     val ROLE = DSL.field("role", SQLDataType.VARCHAR(16))
 }
