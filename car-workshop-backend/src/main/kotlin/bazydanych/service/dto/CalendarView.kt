@@ -1,5 +1,6 @@
 package bazydanych.service.dto
 
+import bazydanych.model.VehicleId
 import bazydanych.model.calendar.Calendar
 import bazydanych.model.calendar.CalendarId
 import bazydanych.model.user.UserId
@@ -13,6 +14,7 @@ data class CalendarView(
     val datetime: LocalDateTime,
     val defect: String,
     val userId: UserId,
+    val vehicleId: VehicleId,
     val status: String
 )
 
@@ -21,5 +23,6 @@ fun Calendar.toDto() = CalendarView(
     datetime = datetime,
     defect = defect,
     userId = userId,
+    vehicleId = vehicleId,
     status = status,
 )
