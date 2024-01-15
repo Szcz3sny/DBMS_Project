@@ -17,6 +17,23 @@ interface Repair {
   price: number;
 }
 
+const exampleRepairsData = [
+  {
+    id: 1,
+    vehicleId: 123,
+    description: "Wymiana opon",
+    status: "Completed",
+    price: 300.0,
+  },
+  {
+    id: 2,
+    vehicleId: 456,
+    description: "Naprawa silnika",
+    status: "In Progress",
+    price: 1500.0,
+  },
+];
+
 const CheckRepairStatus = () => {
   const [repairs, setRepairs] = useState<Repair[]>([]);
 
@@ -25,6 +42,7 @@ const CheckRepairStatus = () => {
       const token = localStorage.getItem("token");
       if (!token) {
         console.error("Brak tokenu");
+        setRepairs(exampleRepairsData);
         return;
       }
 
@@ -54,6 +72,7 @@ const CheckRepairStatus = () => {
         setRepairs(repairsData);
       } catch (error) {
         console.error("Wystąpił problem podczas pobierania danych o naprawach", error);
+        setRepairs(exampleRepairsData);
       }
     };
 
