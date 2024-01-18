@@ -2,6 +2,7 @@ package bazydanych.repository.postgres
 
 import bazydanych.model.repair.RepairId
 import bazydanych.model.repair.RepairStatus
+import bazydanych.model.VehicleId
 import bazydanych.model.user.UserId
 import bazydanych.repository.RepairCreateDetails
 import bazydanych.repository.RepairsRepository
@@ -40,5 +41,12 @@ class PostgresRepairsRepository(private val jooq: DSLContext) : RepairsRepositor
                 val vehicleId = it.getValue(VehiclesTable.OWNER_ID) ?: throw IllegalStateException("No user id returned")
                 UserId(vehicleId)
             }
+    }
+
+    override suspend fun getRepairStatusByVehicleId(vehicleId: VehicleId): List<String> = withContext(Dispatchers.IO) {
+        jooq.select(RepairsTable.STATUS)
+            .from(RepairsTable.TABLE)
+            .where(RepairsTable.VEHICLE_ID.eq(vehicleId.value))
+            .fetch(RepairsTable.STATUS)
     }
 }

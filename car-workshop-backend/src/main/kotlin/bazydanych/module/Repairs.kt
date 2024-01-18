@@ -3,6 +3,7 @@ package bazydanych.module
 import bazydanych.model.repair.RepairId
 import bazydanych.model.repair.RepairPhotoId
 import bazydanych.model.user.UserRole
+import bazydanych.model.VehicleId
 import bazydanych.plugins.JWTUserPrincipal
 import bazydanych.service.RepairsService
 import bazydanych.service.form.RepairCreateForm
@@ -69,6 +70,19 @@ fun Application.repairsModule(
                     }
                 }
 
+                get("/{vehicleId}/repair-status") {
+                    val vehicleId = call.parameters["vehicleId"]?.toIntOrNull() ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@get
+                    }
+
+                    val repairStatus = repairsService.getRepairStatusByVehicleId(VehicleId(vehicleId)) ?: run {
+                        call.respond(HttpStatusCode.NotFound, "Repair status not found")
+                        return@get
+                    }
+
+                    call.respond(mapOf("repairStatus" to repairStatus))
+                }
                 get("/{repairId}/photos") {
                     val principal: JWTUserPrincipal =
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
