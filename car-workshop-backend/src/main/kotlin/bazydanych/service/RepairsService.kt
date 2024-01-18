@@ -3,6 +3,7 @@ package bazydanych.service
 import bazydanych.model.repair.RepairId
 import bazydanych.model.repair.RepairPhotoId
 import bazydanych.model.user.UserId
+import bazydanych.model.VehicleId
 import bazydanych.repository.RepairCreateDetails
 import bazydanych.repository.RepairPhotosRepository
 import bazydanych.repository.RepairsRepository
@@ -30,6 +31,10 @@ class RepairsService(
     suspend fun addRepairPhoto(repairId: RepairId, fileStream: InputStream) : RepairPhotoId {
         val imageUrl = fileStorageService.uploadImage(fileStream)
         return repairPhotosRepository.insert(repairId, imageUrl)
+    }
+
+    suspend fun getRepairStatusByVehicleId(vehicleId: VehicleId): List<String> {
+        return repairsRepository.getRepairStatusByVehicleId(vehicleId)
     }
 
     suspend fun deleteRepairPhoto(id: RepairPhotoId): Boolean {
