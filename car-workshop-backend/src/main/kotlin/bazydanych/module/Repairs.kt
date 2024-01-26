@@ -48,8 +48,7 @@ fun Application.repairsModule(
                         return@post
                     }
 
-                    val vehicleOwner = repairsService.findVehicleOwnerByRepairId(RepairId(repairId))
-                    if (principal.user.role == UserRole.GUEST || vehicleOwner == null || principal.user.id != vehicleOwner) { // todo separate to extension/service
+                    if (principal.user.role == UserRole.GUEST) {
                         call.respond(HttpStatusCode.Forbidden)
                         return@post
                     }
@@ -119,7 +118,7 @@ fun Application.repairsModule(
 
                     val vehicleOwner = repairsService.findVehicleOwnerByRepairId(RepairId(repairId))
 
-                    if (principal.user.role == UserRole.GUEST || vehicleOwner == null || principal.user.id != vehicleOwner) {
+                    if (principal.user.role == UserRole.GUEST && (vehicleOwner == null || principal.user.id != vehicleOwner)) {
                         call.respond(HttpStatusCode.Forbidden)
                         return@get
                     }
@@ -136,8 +135,7 @@ fun Application.repairsModule(
                         return@delete
                     }
 
-                    val vehicleOwner = repairsService.findVehicleOwnerByRepairId(RepairId(repairId))
-                    if (principal.user.role == UserRole.GUEST || vehicleOwner == null || principal.user.id != vehicleOwner) {
+                    if (principal.user.role == UserRole.GUEST) {
                         call.respond(HttpStatusCode.Forbidden)
                         return@delete
                     }
