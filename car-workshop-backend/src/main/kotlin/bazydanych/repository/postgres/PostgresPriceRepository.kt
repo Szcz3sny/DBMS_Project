@@ -46,7 +46,7 @@ class PostgresPriceRepository(private val jooq: DSLContext) : PriceRepository {
                 .set(PricesTable.DESCRIPTION, details.description)
                 .set(PricesTable.PRICE, details.price)
                 .where(PricesTable.ID.eq(id.value))
-                .returning()
+                .returning(PricesTable.ID, PricesTable.NAME, PricesTable.DESCRIPTION, PricesTable.PRICE)
                 .fetchOne()
 
             updatedRecord?.let { parse(it) }

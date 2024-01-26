@@ -39,7 +39,14 @@ class PostgresCalendarRepository(private val jooq: DSLContext) : CalendarReposit
                 .set(CalendarsTable.DEFECT, details.defect)
                 .set(CalendarsTable.STATUS, details.status)
                 .where(CalendarsTable.ID.eq(id.value))
-                .returning()
+                .returning(
+                    CalendarsTable.ID,
+                    CalendarsTable.ID_USER,
+                    CalendarsTable.ID_VEHICLE,
+                    CalendarsTable.DATETIME,
+                    CalendarsTable.DEFECT,
+                    CalendarsTable.STATUS
+                )
                 .fetchOne()?.let { parse(it) }
         }
 
