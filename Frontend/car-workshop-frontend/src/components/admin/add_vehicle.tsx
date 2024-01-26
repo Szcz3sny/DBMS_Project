@@ -151,7 +151,6 @@ const AddVehicle: React.FC = () => {
   return (
     <div className="flex justify-center items-center mt-10">
       <div className="w-full max-w-4xl p-6 bg-black rounded-lg shadow-xl border border-gray-700 text-white">
-        {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit(onSubmit)} className="mb-8">
           <h2 className="text-3xl font-semibold mb-4 text-center">
             Dodaj pojazd
@@ -216,7 +215,7 @@ const AddVehicle: React.FC = () => {
           </div>
           <button
             type="submit"
-            className="mt-4 font-bold w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-800 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            className="mt-4 font-bold w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-800 hover:bg-green-600"
           >
             Dodaj pojazd
           </button>

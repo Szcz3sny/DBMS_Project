@@ -63,7 +63,7 @@ const AddMeeting: React.FC = () => {
   const onSubmit: SubmitHandler<MeetingFormData> = async (data) => {
     try {
       const meetingData = {
-        userId: data.userId,
+        userId: enteredUserId ? enteredUserId : selectedUserId,
         vehicleId: data.vehicleId,
         datetime: data.datetime,
         defect: data.defect,
@@ -161,7 +161,7 @@ const AddMeeting: React.FC = () => {
               <label
                 htmlFor="vehicleId"
                 className="block text-sm font-medium text-gray-300"
-              >
+              > 
                 Pojazd
               </label>
               <select
@@ -215,7 +215,7 @@ const AddMeeting: React.FC = () => {
 
           <button
             type="submit"
-            className="mt-4 w-full inline-flex font-bold justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-800 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            className="mt-4 w-full inline-flex font-bold justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-800 hover:bg-green-600"
           >
             Dodaj spotkanie
           </button>
