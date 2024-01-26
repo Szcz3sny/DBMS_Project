@@ -4,6 +4,7 @@ import bazydanych.model.repair.RepairId
 import bazydanych.model.repair.RepairPhotoId
 import bazydanych.model.user.UserId
 import bazydanych.model.VehicleId
+import bazydanych.model.repair.RepairStatus
 import bazydanych.repository.RepairCreateDetails
 import bazydanych.repository.RepairPhotosRepository
 import bazydanych.repository.RepairsRepository
@@ -35,6 +36,10 @@ class RepairsService(
 
     suspend fun getRepairStatusByVehicleId(vehicleId: VehicleId): List<String> {
         return repairsRepository.getRepairStatusByVehicleId(vehicleId)
+    }
+
+    suspend fun updateRepairStatus(repairId: RepairId, status: RepairStatus): Boolean {
+        return repairsRepository.updateStatus(repairId, status)
     }
 
     suspend fun deleteRepairPhoto(id: RepairPhotoId): Boolean {

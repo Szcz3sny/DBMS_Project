@@ -32,6 +32,14 @@ class PostgresRepairsRepository(private val jooq: DSLContext) : RepairsRepositor
             } ?: throw IllegalStateException("No result data returned")
     }
 
+    override suspend fun updateStatus(repairId: RepairId, status: RepairStatus): Boolean =
+        withContext(Dispatchers.IO) {
+            jooq.update(RepairsTable.TABLE)
+                .set(RepairsTable.STATUS, status.name)
+                .where(RepairsTable.ID.eq(repairId.value))
+                .execute() > 0
+        }
+
     override suspend fun findVehicleOwnerByRepairId(repairId: RepairId): UserId? = withContext(Dispatchers.IO) {
         jooq.select(VehiclesTable.OWNER_ID)
             .from(VehiclesTable.TABLE)

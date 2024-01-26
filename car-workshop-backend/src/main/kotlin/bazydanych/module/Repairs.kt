@@ -4,6 +4,7 @@ import bazydanych.model.repair.RepairId
 import bazydanych.model.repair.RepairPhotoId
 import bazydanych.model.user.UserRole
 import bazydanych.model.VehicleId
+import bazydanych.model.repair.RepairStatus
 import bazydanych.plugins.JWTUserPrincipal
 import bazydanych.service.RepairsService
 import bazydanych.service.form.RepairCreateForm
@@ -70,6 +71,30 @@ fun Application.repairsModule(
                     }
                 }
 
+
+                post("/{repairId}/status") {
+                    val principal: JWTUserPrincipal =
+                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
+
+                    val repairId = call.parameters["repairId"]?.toIntOrNull() ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@post
+                    }
+
+                    if (principal.user.role == UserRole.GUEST) {
+                        call.respond(HttpStatusCode.Forbidden)
+                        return@post
+                    }
+
+                    val status = call.receive<RepairStatusUpdate>()
+                    val success = repairsService.updateRepairStatus(RepairId(repairId), status.status)
+                    if (success) {
+                        call.respond(HttpStatusCode.OK)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Repair not found")
+                    }
+                }
+
                 get("/{vehicleId}/repair-status") {
                     val vehicleId = call.parameters["vehicleId"]?.toIntOrNull() ?: run {
                         call.respond(HttpStatusCode.BadRequest)
@@ -126,3 +151,6 @@ fun Application.repairsModule(
 
 @Serializable
 class RepairAddResponse(val id: RepairId)
+
+@Serializable
+class RepairStatusUpdate(val status: RepairStatus)
