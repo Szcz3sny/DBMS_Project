@@ -64,12 +64,42 @@ const AddVehicle: React.FC = () => {
     }
   }, [selectedUserId]);
 
+  const fetchUserVehicles = (userId: string) => {
+    if (userId) {
+      axios
+        .get(`https://api.bazydanych.fun/v1/user/${userId}/vehicles`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          setUserVehicles(response.data);
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 404) {
+            setUserVehicles([]); // Ustaw pustą listę, jeśli użytkownik nie istnieje
+            console.log("Użytkownik o podanym identyfikatorze nie istnieje.");
+          } else {
+            setError("Błąd przy pobieraniu pojazdów: " + error.message);
+          }
+        });
+    } else {
+      setUserVehicles([]);
+    }
+  };
+
   const handleUserSelectChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const userId = event.target.value;
     setSelectedUserId(userId ? parseInt(userId) : undefined);
     setEnteredUserId(userId);
+
+    if (userId && !isNaN(parseInt(userId))) {
+      fetchUserVehicles(userId);
+    } else {
+      setUserVehicles([]);
+    }
   };
 
   const handleUserIdInputChange = (
@@ -78,6 +108,12 @@ const AddVehicle: React.FC = () => {
     const userId = event.target.value;
     setEnteredUserId(userId);
     setSelectedUserId(userId ? parseInt(userId) : undefined);
+
+    if (userId && !isNaN(parseInt(userId))) {
+      fetchUserVehicles(userId);
+    } else {
+      setUserVehicles([]);
+    }
   };
 
   const handleDeleteVehicle = async (vehicleId: number) => {
@@ -100,8 +136,13 @@ const AddVehicle: React.FC = () => {
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        setError(`Błąd: ${error.response.data.message}`);
-        console.error("Błąd podczas usuwania pojazdu", error.response.data);
+        if (error.response.status === 404) {
+          setUserVehicles([]); // Wyczyść listę pojazdów
+          console.log("Nie znaleziono pojazdu o podanym identyfikatorze.");
+        } else {
+          setError(`Błąd: ${error.response.data.message}`);
+          console.error("Błąd podczas usuwania pojazdu", error.response.data);
+        }
       } else {
         setError("Wystąpił nieznany błąd");
         console.error("Nieznany błąd", error);
@@ -134,6 +175,8 @@ const AddVehicle: React.FC = () => {
         reset();
         setEnteredUserId("");
         setSelectedUserId(undefined);
+
+        fetchUserVehicles(selectedUserId.toString());
       } else {
         setError(`Nie udało się dodać pojazdu: Kod statusu ${response.status}`);
       }

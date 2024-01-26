@@ -1,32 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
-
-type User = {
-  id: number;
-  fullName: string;
-};
+import { useForm, SubmitHandler } from "react-hook-form";
 
 type Vehicle = {
   id: number;
   model: string;
 };
 
-type MeetingFormData = {
-  userId: number;
-  vehicleId: number;
-  datetime: string;
-  defect: string;
-  status: string;
+type User = {
+  id: number;
+  fullName: string;
 };
 
-const AddMeeting: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+type RepairFormData = {
+  vehicleId: number;
+  description: string;
+  price: number;
+};
+
+const AddRepair: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  const [error, setError] = useState("");
-  const { register, handleSubmit, reset, watch } = useForm<MeetingFormData>();
+  const [users, setUsers] = useState<User[]>([]);
+  const { register, handleSubmit, reset, watch } = useForm<RepairFormData>();
   const [selectedUserId, setSelectedUserId] = useState<number | undefined>();
   const [enteredUserId, setEnteredUserId] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     axios
@@ -60,24 +58,15 @@ const AddMeeting: React.FC = () => {
     }
   }, [selectedUserId]);
 
-  const onSubmit: SubmitHandler<MeetingFormData> = async (data) => {
+  const onSubmit: SubmitHandler<RepairFormData> = async (data) => {
+    console.log(data);
     try {
-      const meetingData = {
-        userId: enteredUserId ? enteredUserId : selectedUserId,
-        vehicleId: data.vehicleId,
-        datetime: data.datetime,
-        defect: data.defect,
-        status: data.status,
-      };
-      console.log(meetingData);
       const response = await axios.post(
-        `https://api.bazydanych.fun/v1/calendar`,
+        "https://api.bazydanych.fun/v1/repairs",
         {
-          userId: data.userId,
           vehicleId: data.vehicleId,
-          datetime: data.datetime,
-          defect: data.defect,
-          status: data.status,
+          description: data.description,
+          price: data.price,
         },
         {
           headers: {
@@ -86,22 +75,11 @@ const AddMeeting: React.FC = () => {
         }
       );
 
-      if (response.status === 201) {
-        console.log("Spotkanie zostało dodane", response.data);
-        reset();
-      } else {
-        setError(
-          `Błąd podczas dodawania spotkania: Kod błędu ${response.status}`
-        );
-      }
+      console.log("Pomyślnie dodano naprawę:", response.data);
+      reset();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(`Błąd: ${error.response.data.message}`);
-        console.error("Błąd podczas dodawania spotkania", error.response.data);
-      } else {
-        setError("Wystąpił nienznany błąd");
-        console.error("Nieznany błąd", error);
-      }
+      console.error("Błąd podczas dodawania naprawy:", error);
+      setError("Błąd podczas dodawania naprawy");
     }
   };
 
@@ -126,7 +104,7 @@ const AddMeeting: React.FC = () => {
       <div className="w-full max-w-4xl p-6 bg-black rounded-lg shadow-xl border border-gray-700 text-white">
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2 className="text-3xl font-semibold mb-4 text-center">
-            Dodaj wizytę
+            Dodaj naprawę
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
@@ -137,7 +115,6 @@ const AddMeeting: React.FC = () => {
                 Użytkownik
               </label>
               <select
-                {...register("userId")}
                 value={enteredUserId}
                 onChange={handleUserSelectChange}
                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
@@ -158,7 +135,6 @@ const AddMeeting: React.FC = () => {
                 placeholder="Lub wpisz ID użytkownika"
               />
             </div>
-
             <div>
               <label
                 htmlFor="vehicleId"
@@ -180,34 +156,31 @@ const AddMeeting: React.FC = () => {
               </select>
             </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              {...register("datetime")}
-              type="datetime-local"
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md bg-gray-700 text-white"
-              placeholder="Data i czas"
-              required
-            />
-            <input
-              {...register("defect")}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md bg-gray-700 text-white"
-              placeholder="Opis usterki"
+          <div>
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-300"
+            >
+              Opis
+            </label>
+            <textarea
+              {...register("description")}
+              className="mt-1 block w-full  text-base rounded-md bg-gray-700 text-white"
               required
             />
           </div>
+
           <div>
             <label
-              htmlFor="status"
+              htmlFor="price"
               className="block text-sm font-medium text-gray-300"
             >
-              Status
+              Cena
             </label>
             <input
-              {...register("status")}
-              type="text"
+              {...register("price")}
+              type="number"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
-              placeholder="Status"
               required
             />
           </div>
@@ -216,7 +189,7 @@ const AddMeeting: React.FC = () => {
             type="submit"
             className="mt-4 w-full inline-flex font-bold justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-800 hover:bg-green-600"
           >
-            Dodaj spotkanie
+            Dodaj naprawę
           </button>
         </form>
       </div>
@@ -224,4 +197,4 @@ const AddMeeting: React.FC = () => {
   );
 };
 
-export default AddMeeting;
+export default AddRepair;

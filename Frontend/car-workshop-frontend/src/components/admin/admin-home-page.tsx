@@ -5,6 +5,7 @@ import ChangeOfferPanel from "./change-offer-panel";
 import AddVehicle from "./add_vehicle";
 import AddMeeting from "./add_meeting";
 import AllMeetings from "./all_meetings";
+import AddRepair from "./add_repair";
 interface UserHomePageProps {
   username?: string;
 }
@@ -31,6 +32,8 @@ const AdminHomePage: React.FC<UserHomePageProps> = ({ username }) => {
         return <AddMeeting />;
       case "add_meetings":
         return <AllMeetings />;
+      case "add_repair":
+        return <AddRepair />;
       default:
         return <div></div>;
     }
@@ -70,6 +73,12 @@ const AdminHomePage: React.FC<UserHomePageProps> = ({ username }) => {
           onClick={() => setActiveComponent("add_meetings")}
         >
           Wszystkie wizyty
+        </div>
+        <div
+          className={menuItemClass("add_repair")}
+          onClick={() => setActiveComponent("add_repair")}
+        >
+          Dodaj naprawę
         </div>
       </div>
 
