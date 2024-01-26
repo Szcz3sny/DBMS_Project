@@ -6,6 +6,7 @@ import AddVehicle from "./add_vehicle";
 import AddMeeting from "./add_meeting";
 import AllMeetings from "./all_meetings";
 import AddRepair from "./add_repair";
+import AddPart from "./add_part";
 interface UserHomePageProps {
   username?: string;
 }
@@ -34,6 +35,8 @@ const AdminHomePage: React.FC<UserHomePageProps> = ({ username }) => {
         return <AllMeetings />;
       case "add_repair":
         return <AddRepair />;
+      case "add_part":
+        return <AddPart />;
       default:
         return <div></div>;
     }
@@ -79,6 +82,12 @@ const AdminHomePage: React.FC<UserHomePageProps> = ({ username }) => {
           onClick={() => setActiveComponent("add_repair")}
         >
           Dodaj naprawę
+        </div>
+        <div
+          className={menuItemClass("add_part")}
+          onClick={() => setActiveComponent("add_part")}
+        >
+          Dodaj część
         </div>
       </div>
 

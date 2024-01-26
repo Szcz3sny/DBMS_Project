@@ -55,7 +55,12 @@ const AddMeeting: React.FC = () => {
           setVehicles(response.data);
         })
         .catch((error) => {
-          setError("Błąd przy pobieraniu pojazdów: " + error.message);
+          if (error.response && error.response.status === 404) {
+            setVehicles([]);
+            console.log("Użytkownik o podanym identyfikatorze nie istnieje.");
+          } else {
+            setError("Błąd przy pobieraniu pojazdów: " + error.message);
+          }
         });
     }
   }, [selectedUserId]);

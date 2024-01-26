@@ -16,6 +16,7 @@ type RepairFormData = {
   vehicleId: number;
   description: string;
   price: number;
+  photo: FileList; // Dodane pole dla przechowywania pliku/zdjęcia
 };
 
 const AddRepair: React.FC = () => {
@@ -59,9 +60,8 @@ const AddRepair: React.FC = () => {
   }, [selectedUserId]);
 
   const onSubmit: SubmitHandler<RepairFormData> = async (data) => {
-    console.log(data);
     try {
-      const response = await axios.post(
+      const repairResponse = await axios.post(
         "https://api.bazydanych.fun/v1/repairs",
         {
           vehicleId: data.vehicleId,
@@ -75,12 +75,25 @@ const AddRepair: React.FC = () => {
         }
       );
 
-      console.log("Pomyślnie dodano naprawę:", response.data);
+      const repairId = repairResponse.data.id;
+
+      const formData = new FormData();
+      formData.append("photo", data.photo[0]);
+
+      const photoResponse = await axios.post(
+        `https://api.bazydanych.fun/v1/repairs/${repairId}/photos`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("Pomyślnie dodano zdjęcie:", photoResponse.data);
       reset();
-    } catch (error) {
-      console.error("Błąd podczas dodawania naprawy:", error);
-      setError("Błąd podczas dodawania naprawy");
-    }
+    } catch (error) {}
   };
 
   const handleUserSelectChange = (
@@ -179,8 +192,24 @@ const AddRepair: React.FC = () => {
             </label>
             <input
               {...register("price")}
-              type="number"
+              type="text"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
+              required
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="photo"
+              className="block text-sm font-medium text-gray-300"
+            >
+              Zdjęcie
+            </label>
+            <input
+              type="file"
+              {...register("photo")}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
+              accept="image/*"
               required
             />
           </div>
