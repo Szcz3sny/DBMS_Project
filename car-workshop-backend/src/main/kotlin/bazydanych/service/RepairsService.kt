@@ -37,6 +37,10 @@ class RepairsService(
         return repairPhotosRepository.insert(repairId, imageUrl)
     }
 
+    suspend fun findAllRepairsByVehicleId(vehicleId: VehicleId): List<Repair> {
+        return repairsRepository.findAllRepairsByVehicleId(vehicleId)
+    }
+
     suspend fun getRepairStatusByVehicleId(vehicleId: VehicleId): List<String> {
         return repairsRepository.getRepairStatusByVehicleId(vehicleId)
     }

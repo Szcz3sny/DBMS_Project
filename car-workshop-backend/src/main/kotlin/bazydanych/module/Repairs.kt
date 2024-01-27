@@ -134,6 +134,19 @@ fun Application.repairsModule(
                     call.respond(repairs)
                 }
 
+                get("/{vehicleId}") {
+                    val principal: JWTUserPrincipal =
+                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
+
+                    val vehicleId = call.parameters["vehicleId"]?.toIntOrNull() ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@get
+                    }
+
+                    val repairs = repairsService.findAllRepairsByVehicleId(VehicleId(vehicleId))
+                    call.respond(repairs)
+                }
+
                 delete("/{repairId}/photos/{photoId}") {
                     val principal: JWTUserPrincipal =
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")

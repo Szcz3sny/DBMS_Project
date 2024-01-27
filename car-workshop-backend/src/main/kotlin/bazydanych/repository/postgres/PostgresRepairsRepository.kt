@@ -44,6 +44,18 @@ class PostgresRepairsRepository(private val jooq: DSLContext) : RepairsRepositor
             .fetchInto(Repair::class.java)
     }
 
+    override suspend fun findAllRepairsByVehicleId(vehicleId: VehicleId): List<Repair> = withContext(Dispatchers.IO) {
+        jooq.select(
+            RepairsTable.ID,
+            RepairsTable.VEHICLE_ID,
+            RepairsTable.DESCRIPTION,
+            RepairsTable.STATUS,
+            RepairsTable.PRICE
+        ).from(RepairsTable.TABLE)
+            .where(RepairsTable.VEHICLE_ID.eq(vehicleId.value))
+            .fetchInto(Repair::class.java)
+    }
+
     override suspend fun updateStatus(repairId: RepairId, status: RepairStatus): Boolean =
         withContext(Dispatchers.IO) {
             jooq.update(RepairsTable.TABLE)

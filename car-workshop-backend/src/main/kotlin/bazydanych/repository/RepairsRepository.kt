@@ -17,4 +17,6 @@ interface RepairsRepository {
     suspend fun getRepairStatusByVehicleId(vehicleId: VehicleId): List<String>
 
     suspend fun findAllRepairs(): List<Repair>
+
+    suspend fun findAllRepairsByVehicleId(vehicleId: VehicleId): List<Repair>
 }
