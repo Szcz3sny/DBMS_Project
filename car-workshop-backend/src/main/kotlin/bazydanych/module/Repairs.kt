@@ -164,6 +164,23 @@ fun Application.repairsModule(
                     repairsService.deleteRepairPhoto(RepairPhotoId(repairId))
                 }
 
+                delete("/{repairId}") {
+                    val principal: JWTUserPrincipal =
+                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
+
+                    val repairId = call.parameters["repairId"]?.toIntOrNull() ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@delete
+                    }
+
+                    val success = repairsService.deleteRepair(RepairId(repairId))
+                    if (success) {
+                        call.respond(HttpStatusCode.OK, "Repair deleted successfully")
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Repair not found")
+                    }
+                }
+
 
 
             }

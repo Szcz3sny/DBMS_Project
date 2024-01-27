@@ -53,6 +53,19 @@ class RepairsService(
         return repairPhotosRepository.deleteRepairPhoto(id)
     }
 
+    suspend fun deleteRepair(repairId: RepairId): Boolean {
+        // Delete the photos associated with the repair
+        val photosDeleted = repairPhotosRepository.deletePhotosByRepairId(repairId)
+
+        // If the photos were deleted successfully, delete the repair
+        if (photosDeleted) {
+            return repairsRepository.deleteRepair(repairId)
+        }
+
+        // If the photos were not deleted successfully, return false
+        return false
+    }
+
     suspend fun findVehicleOwnerByRepairId(repairId: RepairId): UserId? {
         return repairsRepository.findVehicleOwnerByRepairId(repairId)
     }

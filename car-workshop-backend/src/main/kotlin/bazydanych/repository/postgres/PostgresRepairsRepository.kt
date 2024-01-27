@@ -56,6 +56,12 @@ class PostgresRepairsRepository(private val jooq: DSLContext) : RepairsRepositor
             .fetchInto(Repair::class.java)
     }
 
+    override suspend fun deleteRepair(repairId: RepairId): Boolean = withContext(Dispatchers.IO) {
+        jooq.deleteFrom(RepairsTable.TABLE)
+            .where(RepairsTable.ID.eq(repairId.value))
+            .execute() > 0
+    }
+
     override suspend fun updateStatus(repairId: RepairId, status: RepairStatus): Boolean =
         withContext(Dispatchers.IO) {
             jooq.update(RepairsTable.TABLE)

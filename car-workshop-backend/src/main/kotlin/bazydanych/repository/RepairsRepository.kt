@@ -19,4 +19,6 @@ interface RepairsRepository {
     suspend fun findAllRepairs(): List<Repair>
 
     suspend fun findAllRepairsByVehicleId(vehicleId: VehicleId): List<Repair>
+
+    suspend fun deleteRepair(repairId: RepairId): Boolean
 }

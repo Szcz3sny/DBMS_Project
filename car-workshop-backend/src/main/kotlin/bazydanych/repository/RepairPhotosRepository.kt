@@ -14,4 +14,6 @@ interface RepairPhotosRepository {
     suspend fun findRepairPhotosByRepairId(repairId: RepairId): List<RepairPhoto>
 
     suspend fun deleteRepairPhoto(id: RepairPhotoId): Boolean
+
+    suspend fun deletePhotosByRepairId(repairId: RepairId): Boolean
 }
