@@ -32,7 +32,8 @@ class RepairsService(
     suspend fun findAllRepairs(): List<Repair> {
         return repairsRepository.findAllRepairs()
     }
-    suspend fun addRepairPhoto(repairId: RepairId, fileStream: InputStream) : RepairPhotoId {
+
+    suspend fun addRepairPhoto(repairId: RepairId, fileStream: InputStream): RepairPhotoId {
         val imageUrl = fileStorageService.uploadImage(fileStream)
         return repairPhotosRepository.insert(repairId, imageUrl)
     }
@@ -54,16 +55,14 @@ class RepairsService(
     }
 
     suspend fun deleteRepair(repairId: RepairId): Boolean {
-        val photosDeleted = repairPhotosRepository.deletePhotosByRepairId(repairId)
-        if (photosDeleted) {
-            return repairsRepository.deleteRepair(repairId)
-        }
-        return false
+        repairPhotosRepository.deletePhotosByRepairId(repairId)
+        return repairsRepository.deleteRepair(repairId)
     }
 
     suspend fun findVehicleOwnerByRepairId(repairId: RepairId): UserId? {
         return repairsRepository.findVehicleOwnerByRepairId(repairId)
     }
+
     suspend fun findRepairPhotosIdsByRepairId(repairId: RepairId): List<RepairPhotoView> {
         return repairPhotosRepository.findRepairPhotosByRepairId(repairId).map { it.toDto() }
     }
