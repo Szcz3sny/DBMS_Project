@@ -156,12 +156,17 @@ fun Application.repairsModule(
                         return@delete
                     }
 
+                    val photoId = call.parameters["photoId"]?.toIntOrNull() ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@delete
+                    }
+
                     if (principal.user.role == UserRole.GUEST) {
                         call.respond(HttpStatusCode.Forbidden)
                         return@delete
                     }
 
-                    repairsService.deleteRepairPhoto(RepairPhotoId(repairId))
+                    repairsService.deleteRepairPhoto(RepairPhotoId(photoId))
                 }
 
                 delete("/{repairId}") {
