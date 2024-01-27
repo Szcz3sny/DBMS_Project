@@ -166,7 +166,12 @@ fun Application.repairsModule(
                         return@delete
                     }
 
-                    repairsService.deleteRepairPhoto(RepairPhotoId(photoId))
+                    val success = repairsService.deleteRepairPhoto(RepairPhotoId(photoId))
+                    if (success) {
+                        call.respond(HttpStatusCode.OK)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Repair photo not found")
+                    }
                 }
 
                 delete("/{repairId}") {
