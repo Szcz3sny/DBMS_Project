@@ -1,6 +1,7 @@
 package bazydanych.repository.postgres
 
 import bazydanych.model.repair.RepairId
+import bazydanych.model.repair.Repair
 import bazydanych.model.repair.RepairStatus
 import bazydanych.model.VehicleId
 import bazydanych.model.user.UserId
@@ -30,6 +31,17 @@ class PostgresRepairsRepository(private val jooq: DSLContext) : RepairsRepositor
                 val id = it.getValue(RepairsTable.ID) ?: throw IllegalStateException("No repair id returned")
                 RepairId(id)
             } ?: throw IllegalStateException("No result data returned")
+    }
+
+    override suspend fun findAllRepairs(): List<Repair> = withContext(Dispatchers.IO) {
+        jooq.select(
+            RepairsTable.ID,
+            RepairsTable.VEHICLE_ID,
+            RepairsTable.DESCRIPTION,
+            RepairsTable.STATUS,
+            RepairsTable.PRICE
+        ).from(RepairsTable.TABLE)
+            .fetchInto(Repair::class.java)
     }
 
     override suspend fun updateStatus(repairId: RepairId, status: RepairStatus): Boolean =

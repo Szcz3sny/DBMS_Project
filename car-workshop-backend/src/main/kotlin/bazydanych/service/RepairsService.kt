@@ -1,6 +1,7 @@
 package bazydanych.service
 
 import bazydanych.model.repair.RepairId
+import bazydanych.model.repair.Repair
 import bazydanych.model.repair.RepairPhotoId
 import bazydanych.model.user.UserId
 import bazydanych.model.VehicleId
@@ -28,7 +29,9 @@ class RepairsService(
 
         return repairsRepository.insert(details)
     }
-
+    suspend fun findAllRepairs(): List<Repair> {
+        return repairsRepository.findAllRepairs()
+    }
     suspend fun addRepairPhoto(repairId: RepairId, fileStream: InputStream) : RepairPhotoId {
         val imageUrl = fileStorageService.uploadImage(fileStream)
         return repairPhotosRepository.insert(repairId, imageUrl)

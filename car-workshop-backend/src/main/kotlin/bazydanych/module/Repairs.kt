@@ -126,6 +126,14 @@ fun Application.repairsModule(
                     call.respond(repairsService.findRepairPhotosIdsByRepairId(RepairId(repairId)))
                 }
 
+                get {
+                    val principal: JWTUserPrincipal =
+                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
+
+                    val repairs = repairsService.findAllRepairs()
+                    call.respond(repairs)
+                }
+
                 delete("/{repairId}/photos/{photoId}") {
                     val principal: JWTUserPrincipal =
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
@@ -142,6 +150,9 @@ fun Application.repairsModule(
 
                     repairsService.deleteRepairPhoto(RepairPhotoId(repairId))
                 }
+
+
+
             }
         }
     }

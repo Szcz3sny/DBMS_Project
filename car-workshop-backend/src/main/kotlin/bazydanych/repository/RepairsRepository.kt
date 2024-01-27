@@ -1,6 +1,7 @@
 package bazydanych.repository
 
 import bazydanych.model.repair.RepairId
+import bazydanych.model.repair.Repair
 import bazydanych.model.user.UserId
 import bazydanych.model.VehicleId
 import bazydanych.model.repair.RepairStatus
@@ -15,4 +16,5 @@ interface RepairsRepository {
 
     suspend fun getRepairStatusByVehicleId(vehicleId: VehicleId): List<String>
 
+    suspend fun findAllRepairs(): List<Repair>
 }
