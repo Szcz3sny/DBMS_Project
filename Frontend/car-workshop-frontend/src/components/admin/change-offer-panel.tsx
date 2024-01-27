@@ -144,7 +144,7 @@ export default function ChangeOfferPanel() {
               placeholder="Cena"
             />
             <button
-              className=" w-full inline-flex font-bold justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-800 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              className=" w-full inline-flex font-bold justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-800 hover:bg-green-600 "
               onClick={addOffer}
             >
               Dodaj
@@ -219,7 +219,7 @@ export default function ChangeOfferPanel() {
                         </button>
                         <button
                           onClick={() => deleteOffer(offer.id)}
-                          className="bg-red-800 hover:bg-red-600 text-white font-bold py-1 px-3 rounded transition-colors duration-300"
+                          className="bg-red-600 hover:bg-red-800 text-white font-bold py-1 px-3 rounded transition-colors duration-300"
                         >
                           Usuń
                         </button>

@@ -263,7 +263,7 @@ const AddVehicle: React.FC = () => {
             Dodaj pojazd
           </button>
         </form>
-        <div className="mb-4">
+        <div className="mb-4 overflow-y-auto max-h-40">
           <h3 className="text-2xl font-semibold mb-3 text-center">
             Lista pojazdów
           </h3>

@@ -202,16 +202,10 @@ const AddMeeting: React.FC = () => {
             />
           </div>
           <div>
-            <label
-              htmlFor="status"
-              className="block text-sm font-medium text-gray-300"
-            >
-              Status
-            </label>
             <input
               {...register("status")}
               type="text"
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
+              className="mt-4 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
               placeholder="Status"
               required
             />

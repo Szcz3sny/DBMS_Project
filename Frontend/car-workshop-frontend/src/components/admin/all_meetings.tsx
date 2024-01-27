@@ -70,15 +70,10 @@ const AllMeetings: React.FC = () => {
         console.log("Spotkanie zostało pomyślnie usunięte");
         setMeetings(meetings.filter((meeting) => meeting.id !== meetingId));
       } else {
-        setError(
-          `Błąd podczas usuwania spotkania: Kod błędu ${response.status}`
-        );
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        setError(`Błąd: ${error.response.data.message}`);
       } else {
-        setError("Nastąpił nieznany błąd");
       }
     }
   };

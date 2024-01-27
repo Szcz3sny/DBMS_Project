@@ -13,36 +13,19 @@ interface Repair {
   id: number;
   vehicleId: number;
   description: string;
-  status: string;
   price: number;
 }
 
-const exampleRepairsData = [
-  {
-    id: 1,
-    vehicleId: 123,
-    description: "Wymiana opon",
-    status: "Completed",
-    price: 300.0,
-  },
-  {
-    id: 2,
-    vehicleId: 456,
-    description: "Naprawa silnika",
-    status: "In Progress",
-    price: 1500.0,
-  },
-];
-
 const CheckRepairStatus = () => {
   const [repairs, setRepairs] = useState<Repair[]>([]);
-
+  const [selectedRepairPhotos, setSelectedRepairPhotos] = useState<string[]>(
+    []
+  );
   useEffect(() => {
     const fetchRepairs = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
         console.error("Brak tokenu");
-        setRepairs(exampleRepairsData);
         return;
       }
 
@@ -62,22 +45,68 @@ const CheckRepairStatus = () => {
           config
         );
 
-        const repairsPromises = vehiclesResponse.data.map((vehicle: any) =>
-          axios.get(`https://api.bazydanych.fun/v1/repairs/vehicle/${vehicle.id}`, config)
-        );
-
-        const repairsResponses = await Promise.all(repairsPromises);
-        const repairsData = repairsResponses.flatMap(response => response.data);
+        const repairsData: Repair[] = [];
+        for (const vehicle of vehiclesResponse.data) {
+          const repairsResponse = await axios.get(
+            `https://api.bazydanych.fun/v1/repairs/${vehicle.id}`,
+            config
+          );
+          for (const repair of repairsResponse.data) {
+            repairsData.push({
+              id: repair.id,
+              vehicleId: vehicle.id,
+              description: repair.description,
+              price: repair.price,
+            });
+          }
+        }
 
         setRepairs(repairsData);
       } catch (error) {
-        console.error("Wystąpił problem podczas pobierania danych o naprawach", error);
-        setRepairs(exampleRepairsData);
+        console.error(
+          "Wystąpił problem podczas pobierania danych o naprawach",
+          error
+        );
       }
     };
 
     fetchRepairs();
   }, []);
+
+  const handleShowPhotos = async (repairId: number) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Brak tokenu");
+        return;
+      }
+
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      const photosResponse = await axios.get(
+        `https://api.bazydanych.fun/v1/repairs/${repairId}/photos`,
+        config
+      );
+      setSelectedRepairPhotos(photosResponse.data);
+      console.log("Zdjęcia dla naprawy", repairId, ":", photosResponse.data);
+    } catch (error) {
+      console.error(
+        "Wystąpił problem podczas pobierania zdjęć dla naprawy",
+        repairId,
+        ":",
+        error
+      );
+    }
+  };
+  const handleCloseModal = () => {
+    setSelectedRepairPhotos([]);
+  };
+  const handlePhotoClick = (photoUrl: string) => {
+    window.open(photoUrl, "_blank");
+  };
+
   return (
     <div>
       <div className="flex justify-center items-center h-1/5 mt-5">
@@ -92,8 +121,8 @@ const CheckRepairStatus = () => {
             <TableRow>
               <TableHead className="w-[200px]">VIN Pojazdu</TableHead>
               <TableHead>Opis</TableHead>
-              <TableHead>Status</TableHead>
               <TableHead>Cena</TableHead>
+              <TableHead>Zdjęcia</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -101,15 +130,51 @@ const CheckRepairStatus = () => {
               <TableRow key={repair.id}>
                 <TableCell>{repair.vehicleId}</TableCell>
                 <TableCell>{repair.description}</TableCell>
-                <TableCell>{repair.status}</TableCell>
-                <TableCell>{`${repair.price.toFixed(2)} zł`}</TableCell>
+                <TableCell>
+                  {typeof repair.price === "number" ||
+                  !isNaN(Number(repair.price))
+                    ? `${Number(repair.price).toFixed(2)} zł`
+                    : "Brak danych"}
+                </TableCell>
+                <TableCell>
+                  <button
+                    onClick={() => handleShowPhotos(repair.id)}
+                    className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Wyświetl zdjęcia
+                  </button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
+      {selectedRepairPhotos.length > 0 && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center">
+          <div className="bg-white p-4 rounded-lg">
+            <h2 className="text-xl font-bold mb-4">Zdjęcia dla naprawy</h2>
+            <div className="grid grid-cols-3 gap-4">
+              {selectedRepairPhotos.map((photo, index) => (
+                <img
+                  key={index}
+                  src={photo.photoUrl}
+                  alt={`Zdjęcie ${index + 1}`}
+                  className="m-2 cursor-pointer w-24 h-24 object-cover rounded-md"
+                  onClick={() => handlePhotoClick(photo.photoUrl)}
+                />
+              ))}
+            </div>
+
+            <button
+              className="mx-auto w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+              onClick={handleCloseModal}
+            >
+              Zamknij
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
-
 export default CheckRepairStatus;

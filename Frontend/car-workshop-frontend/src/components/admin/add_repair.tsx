@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { cwd } from "process";
 
 type Vehicle = {
   id: number;
@@ -12,20 +13,39 @@ type User = {
   fullName: string;
 };
 
+type Repair = {
+  id: number;
+  vehicleId: number;
+  description: string;
+  price: number;
+};
+
 type RepairFormData = {
   vehicleId: number;
   description: string;
   price: number;
-  photo: FileList; // Dodane pole dla przechowywania pliku/zdjęcia
+  photo: FileList;
 };
+
+interface PhotoData {
+  id: number;
+  repairId: number;
+  photoUrl: string;
+}
 
 const AddRepair: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [repairs, setRepairs] = useState<Repair[]>([]);
+  const [repairPhotos, setRepairPhotos] = useState<PhotoData[]>([]);
   const { register, handleSubmit, reset, watch } = useForm<RepairFormData>();
   const [selectedUserId, setSelectedUserId] = useState<number | undefined>();
   const [enteredUserId, setEnteredUserId] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
+  const [selectedRepairId, setSelectedRepairId] = useState<number | null>(null);
+  const [selectedPhotoUrl, setSelectedPhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     axios
@@ -58,6 +78,21 @@ const AddRepair: React.FC = () => {
         });
     }
   }, [selectedUserId]);
+
+  useEffect(() => {
+    axios
+      .get("https://api.bazydanych.fun/v1/repairs", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((response) => {
+        setRepairs(response.data);
+      })
+      .catch((error) => {
+        setError("Błąd przy pobieraniu napraw: " + error.message);
+      });
+  }, []);
 
   const onSubmit: SubmitHandler<RepairFormData> = async (data) => {
     try {
@@ -93,9 +128,29 @@ const AddRepair: React.FC = () => {
 
       console.log("Pomyślnie dodano zdjęcie:", photoResponse.data);
       reset();
-    } catch (error) {}
+
+      fetchRepairPhotos(repairId);
+    } catch (error) {
+      console.error("Error occurred while adding repair:", error);
+    }
   };
 
+  const openDialog = (repairId: number) => {
+    setSelectedRepairId(repairId);
+    setIsDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedPhoto(null);
+  };
+
+  const handlePhotoUpload = () => {
+    if (selectedPhoto && selectedRepairId !== null) {
+      handleAddPhoto(selectedRepairId, selectedPhoto);
+      closeDialog();
+    }
+  };
   const handleUserSelectChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -112,6 +167,85 @@ const AddRepair: React.FC = () => {
     setSelectedUserId(userId ? parseInt(userId) : undefined);
   };
 
+  const fetchRepairPhotos = async (repairId: number) => {
+    try {
+      const response = await axios.get(
+        `https://api.bazydanych.fun/v1/repairs/${repairId}/photos`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      const photosWithRepairId = response.data.map((photo: any) => ({
+        id: photo.id,
+        repairId: repairId,
+        photoUrl: photo.photoUrl,
+      }));
+
+      console.log(photosWithRepairId);
+      setRepairPhotos(photosWithRepairId);
+    } catch (error) {
+      console.error("Error occurred while fetching repair photos:", error);
+    }
+  };
+
+  const handleDeletePhoto = async (repairId: number, photoId: number) => {
+    try {
+      await axios.delete(
+        `https://api.bazydanych.fun/v1/repairs/${repairId}/photos/${photoId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      fetchRepairPhotos(repairId);
+    } catch (error) {}
+  };
+  const handleDeleteRepair = async (repairId: number) => {
+    try {
+      await axios.delete(`https://api.bazydanych.fun/v1/repairs/${repairId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setRepairs(repairs.filter((repair) => repair.id !== repairId));
+      console.log("Naprawa została pomyślnie usunięta");
+    } catch (error) {
+      console.error("Error occurred while deleting repair:", error);
+    }
+  };
+
+  const handleAddPhoto = async (repairId: number, photo: File) => {
+    try {
+      const repairPhotoForm = new FormData();
+      repairPhotoForm.append("photo", photo);
+
+      const photoResponse = await axios.post(
+        `https://api.bazydanych.fun/v1/repairs/${repairId}/photos`,
+        repairPhotoForm,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("Pomyślnie dodano zdjęcie do naprawy:", photoResponse.data);
+      fetchRepairPhotos(repairId);
+    } catch (error) {
+      console.error("Error occurred while adding photo:", error);
+    }
+  };
+
+  const handlePhotoClick = (photoUrl: string) => {
+    window.open(photoUrl, "_blank");
+  };
+
   return (
     <div className="flex justify-center items-center mt-10">
       <div className="w-full max-w-4xl p-6 bg-black rounded-lg shadow-xl border border-gray-700 text-white">
@@ -121,12 +255,6 @@ const AddRepair: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label
-                htmlFor="userId"
-                className="block text-sm font-medium text-gray-300"
-              >
-                Użytkownik
-              </label>
               <select
                 value={enteredUserId}
                 onChange={handleUserSelectChange}
@@ -144,20 +272,15 @@ const AddRepair: React.FC = () => {
                 type="text"
                 value={enteredUserId}
                 onChange={handleUserIdInputChange}
-                className="mt-4 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
+                className="mt-3 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
                 placeholder="Lub wpisz ID użytkownika"
               />
             </div>
             <div>
-              <label
-                htmlFor="vehicleId"
-                className="block text-sm font-medium text-gray-300"
-              >
-                Pojazd
-              </label>
               <select
                 {...register("vehicleId")}
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md bg-gray-700 text-white"
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
+                required
                 disabled={!selectedUserId}
               >
                 <option value="">Wybierz pojazd</option>
@@ -169,47 +292,32 @@ const AddRepair: React.FC = () => {
               </select>
             </div>
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <input
+                {...register("price")}
+                type="text"
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-gray-700 text-white rounded-md"
+                placeholder="Cena"
+                required
+              />
+            </div>
+            <div>
+              <input
+                type="file"
+                {...register("photo")}
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
+                accept="image/*"
+                required
+              />
+            </div>
+          </div>
           <div>
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-gray-300"
-            >
-              Opis
-            </label>
-            <textarea
+            <input
               {...register("description")}
-              className="mt-1 block w-full  text-base rounded-md bg-gray-700 text-white"
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="price"
-              className="block text-sm font-medium text-gray-300"
-            >
-              Cena
-            </label>
-            <input
-              {...register("price")}
               type="text"
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="photo"
-              className="block text-sm font-medium text-gray-300"
-            >
-              Zdjęcie
-            </label>
-            <input
-              type="file"
-              {...register("photo")}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
-              accept="image/*"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base bg-gray-700 text-white rounded-md"
+              placeholder="Opis"
               required
             />
           </div>
@@ -221,6 +329,190 @@ const AddRepair: React.FC = () => {
             Dodaj naprawę
           </button>
         </form>
+        <div className="mt-6">
+          <h2 className="text-xl font-semibold mb-2">Istniejące naprawy</h2>
+          <div className="max-h-40 overflow-y-auto">
+            <ul className="divide-y divide-gray-500">
+              {repairs.map((repair) => (
+                <li key={repair.id} className="py-2">
+                  <p>
+                    Vehicle ID: {repair.vehicleId}, Description:{" "}
+                    {repair.description}, Price: {repair.price}
+                  </p>
+                  <div className="flex justify-center mt-2">
+                    <button
+                      className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded mr-2"
+                      onClick={() => fetchRepairPhotos(repair.id)}
+                    >
+                      Wyświetl zdjęcia
+                    </button>
+                    <button
+                      className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => handleDeleteRepair(repair.id)}
+                    >
+                      Usuń naprawę
+                    </button>
+                    {isDialogOpen && (
+                      <div className="fixed inset-0 overflow-y-auto">
+                        <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                          <div className="fixed inset-0 transition-opacity">
+                            <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+                          </div>
+                          <span
+                            className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                            aria-hidden="true"
+                          >
+                            &#8203;
+                          </span>
+                          <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                              <div className="sm:flex sm:items-start">
+                                <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                  <h3
+                                    className="text-lg leading-6 font-medium text-gray-900 mb-2"
+                                    id="modal-title"
+                                  >
+                                    Dodaj zdjęcie
+                                  </h3>
+                                  <div className="mt-2">
+                                    <input
+                                      type="file"
+                                      onChange={(e) =>
+                                        setSelectedPhoto(
+                                          e.target.files?.[0] || null
+                                        )
+                                      }
+                                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-100 text-gray-900"
+                                      accept="image/*"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                              <button
+                                onClick={handlePhotoUpload}
+                                type="button"
+                                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-500 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
+                              >
+                                Dodaj
+                              </button>
+                              <button
+                                onClick={closeDialog}
+                                type="button"
+                                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm"
+                              >
+                                Anuluj
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <button
+                      className="bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 rounded ml-2"
+                      onClick={() => openDialog(repair.id)}
+                    >
+                      Dodaj zdjęcie
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        {repairPhotos.length > 0 && (
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+              <div className="fixed inset-0 transition-opacity">
+                <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+              </div>
+              <span
+                className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                aria-hidden="true"
+              >
+                &#8203;
+              </span>
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div
+                  className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4"
+                  style={{ maxHeight: "80vh" }}
+                >
+                  <div className="sm:flex sm:items-start">
+                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                      <h3
+                        className="text-lg leading-6 font-medium text-gray-900 mb-2"
+                        id="modal-title"
+                      >
+                        Zdjęcia naprawy
+                      </h3>
+                      <div className="flex flex-wrap mt-6">
+                        {repairPhotos.map((photo, index) => (
+                          <div
+                            key={index}
+                            className="m-2 cursor-pointer"
+                            onClick={() => handlePhotoClick(photo.photoUrl)}
+                          >
+                            <div className="relative">
+                              <img
+                                src={photo.photoUrl}
+                                alt={`Zdjęcie ${index + 1}`}
+                                className="w-24 h-24 object-cover rounded-md"
+                              />
+                              <button
+                                className="absolute top-0 right-0 bg-red-600 text-white p-1 rounded-full"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeletePhoto(photo.repairId, photo.id);
+                                }}
+                              >
+                                X
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      {selectedPhotoUrl && (
+                        <div className="fixed inset-0 overflow-y-auto z-50 flex items-center justify-center bg-black bg-opacity-75">
+                          <div className="max-w-4xl w-full p-4">
+                            <img
+                              src={selectedPhotoUrl}
+                              alt="Powiększone zdjęcie"
+                              className="max-w-full max-h-full"
+                            />
+                          </div>
+                          <button
+                            className="absolute top-0 right-0 m-4 text-white"
+                            onClick={() => setSelectedPhotoUrl(null)}
+                          >
+                            X
+                          </button>
+                        </div>
+                      )}
+                      <button
+                        className="absolute top-0 right-0 m-4 text-white"
+                        onClick={() => setSelectedPhotoUrl(null)}
+                      >
+                        X
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                  <button
+                    onClick={() => setRepairPhotos([])}
+                    type="button"
+                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  >
+                    Zamknij
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
