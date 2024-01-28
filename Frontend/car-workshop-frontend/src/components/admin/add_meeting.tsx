@@ -24,8 +24,11 @@ const AddMeeting: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [error, setError] = useState("");
-  const { register, handleSubmit, reset, watch } = useForm<MeetingFormData>();
-  const [selectedUserId, setSelectedUserId] = useState<number | undefined>();
+  const { register, handleSubmit, reset } = useForm<MeetingFormData>({
+    defaultValues: {
+      status: "IN_PROGRESS" 
+    }
+  });  const [selectedUserId, setSelectedUserId] = useState<number | undefined>();
   const [enteredUserId, setEnteredUserId] = useState<string>("");
 
   useEffect(() => {
@@ -198,15 +201,6 @@ const AddMeeting: React.FC = () => {
               {...register("defect")}
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md bg-gray-700 text-white"
               placeholder="Opis usterki"
-              required
-            />
-          </div>
-          <div>
-            <input
-              {...register("status")}
-              type="text"
-              className="mt-4 block w-full pl-3 pr-10 py-2 text-base rounded-md bg-gray-700 text-white"
-              placeholder="Status"
               required
             />
           </div>
