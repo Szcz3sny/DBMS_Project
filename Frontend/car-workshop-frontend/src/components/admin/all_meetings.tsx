@@ -16,6 +16,27 @@ type Meeting = {
   status: string;
 };
 
+const translateStatus = (status: string) => {
+  const statusTranslations: {[key: string]: string} = {
+    'FINISHED': 'Zakończono',
+    'IN_PROGRESS': 'W trakcie',
+    'CANCELED': 'Anulowano',
+  };
+
+  return statusTranslations[status] || status;
+};
+
+const formatDate = (datetime: string) => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric', 
+    hour: '2-digit', 
+    minute: '2-digit'
+  };
+  return new Date(datetime).toLocaleString('pl-PL', options);
+};
+
 const AllMeetings: React.FC = () => {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -196,16 +217,19 @@ const AllMeetings: React.FC = () => {
               >
                 {editingMeetingId === meeting.id ? (
                   <div className="flex items-center space-x-4 mb-4">
-                    <input
-                      type="text"
-                      value={editedMeeting?.status || ""}
-                      onChange={(e) =>
-                        setEditedMeeting((prev) =>
-                          prev ? { ...prev, status: e.target.value } : null
-                        )
-                      }
-                      className="p-2 border border-gray-600 rounded bg-gray-700 text-white"
-                    />
+                    <select
+                    value={editedMeeting?.status || ""}
+                    onChange={(e) =>
+                      setEditedMeeting((prev) =>
+                        prev ? { ...prev, status: e.target.value } : null
+                      )
+                    }
+                    className="p-2 border border-gray-600 rounded bg-gray-700 text-white"
+                  >
+                    <option value="IN_PROGRESS">W trakcie</option>
+                    <option value="FINISHED">Zakończono</option>
+                    <option value="CANCELED">Anulowano</option>
+                  </select>
                     <input
                       type="text"
                       value={editedMeeting?.datetime || ""}
@@ -219,8 +243,8 @@ const AllMeetings: React.FC = () => {
                   </div>
                 ) : (
                   <span>
-                    {getUserNameById(meeting.userId)} (ID: {meeting.userId}) -{" "}
-                    {meeting.datetime} -{meeting.defect} - {meeting.status}
+                      {getUserNameById(meeting.userId)} (ID: {meeting.userId}) -{" "}
+                      {formatDate(meeting.datetime)} - {meeting.defect} - {translateStatus(meeting.status)}
                   </span>
                 )}
                 <div className="flex space-x-2 items-center justify-center mt-2">
