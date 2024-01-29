@@ -46,24 +46,29 @@ export default function Offers() {
       </div>
 
       <div className="mx-auto max-w-screen-lg text-white ">
-        <Table className="bg-black text-white bg-black bg-opacity-80">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[200px]">Usterka</TableHead>
-              <TableHead>Opis</TableHead>
-              <TableHead>Cena</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.map((item: ApiData, index: number) => (
-              <TableRow key={index}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.description}</TableCell>
-                <TableCell>{parseFloat(item.price).toFixed(2)} zł</TableCell>
+        <div
+          className="table-container"
+          style={{ maxHeight: "440px", overflowY: "auto" }}
+        >
+          <Table className="bg-black text-white bg-black bg-opacity-80">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[200px]">Usterka</TableHead>
+                <TableHead>Opis</TableHead>
+                <TableHead>Cena</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {data.map((item: ApiData, index: number) => (
+                <TableRow key={index}>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.description}</TableCell>
+                  <TableCell>{parseFloat(item.price).toFixed(2)} zł</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );
