@@ -18,6 +18,28 @@ interface Visit {
   status: string;
 }
 
+const translateStatus = (status: string) => {
+  const statusTranslations: {[key: string]: string} = {
+    'FINISHED': 'Zakończono',
+    'IN_PROGRESS': 'W trakcie',
+    'CANCELED': 'Anulowano',
+  };
+
+  return statusTranslations[status] || status;
+};
+
+const formatDate = (datetime: string) => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric', 
+    hour: '2-digit', 
+    minute: '2-digit'
+  };
+  return new Date(datetime).toLocaleString('pl-PL', options);
+};
+
+
 const CheckVisits = () => {
   const [visits, setVisits] = useState<Visit[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -75,9 +97,10 @@ useEffect(() => {
           <TableBody>
             {visits.map((visit, index) => (
               <TableRow key={index}>
-                <TableCell>{visit.datetime}</TableCell>
+                <TableCell>{formatDate(visit.datetime)}</TableCell>
                 <TableCell>{visit.defect}</TableCell>
-                <TableCell>{visit.status}</TableCell>
+                <TableCell>{translateStatus(visit.status)}</TableCell>
+
               </TableRow>
             ))}
           </TableBody>
