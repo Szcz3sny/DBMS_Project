@@ -14,7 +14,18 @@ interface Repair {
   vehicleId: number;
   description: string;
   price: number;
+  status: string;
 }
+
+const translateStatus = (status: string) => {
+  const statusTranslations: {[key: string]: string} = {
+    'FINISHED': 'Zakończono',
+    'IN_PROGRESS': 'W trakcie',
+    'CANCELED': 'Anulowano',
+  };
+
+  return statusTranslations[status] || status;
+};
 
 const CheckRepairStatus = () => {
   const [repairs, setRepairs] = useState<Repair[]>([]);
@@ -57,6 +68,7 @@ const CheckRepairStatus = () => {
               vehicleId: vehicle.id,
               description: repair.description,
               price: repair.price,
+              status: repair.status,
             });
           }
         }
@@ -119,9 +131,10 @@ const CheckRepairStatus = () => {
         <Table className="bg-black text-white bg-opacity-80">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[200px]">VIN Pojazdu</TableHead>
+              <TableHead className="w-[200px]"> Pojazdu</TableHead>
               <TableHead>Opis</TableHead>
               <TableHead>Cena</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Zdjęcia</TableHead>
             </TableRow>
           </TableHeader>
@@ -136,6 +149,7 @@ const CheckRepairStatus = () => {
                     ? `${Number(repair.price).toFixed(2)} zł`
                     : "Brak danych"}
                 </TableCell>
+                <TableCell>{translateStatus(repair.status)}</TableCell>
                 <TableCell>
                   <button
                     onClick={() => handleShowPhotos(repair.id)}
