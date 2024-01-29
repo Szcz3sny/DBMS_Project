@@ -18,6 +18,7 @@ type Repair = {
   vehicleId: number;
   description: string;
   price: number;
+  status: string; 
 };
 
 type RepairFormData = {
@@ -33,6 +34,16 @@ interface PhotoData {
   photoUrl: string;
 }
 
+const translateStatus = (status: string) => {
+  const statusTranslations: {[key: string]: string} = {
+    'FINISHED': 'Zakończono',
+    'IN_PROGRESS': 'W trakcie',
+    'CANCELED': 'Anulowano',
+  };
+
+  return statusTranslations[status] || status;
+};
+
 const AddRepair: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -46,6 +57,9 @@ const AddRepair: React.FC = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
   const [selectedRepairId, setSelectedRepairId] = useState<number | null>(null);
   const [selectedPhotoUrl, setSelectedPhotoUrl] = useState<string | null>(null);
+  const [editingRepairId, setEditingRepairId] = useState<number | null>(null);
+  const [editedRepair, setEditedRepair] = useState<Repair | null>(null);
+
 
   useEffect(() => {
     axios
@@ -110,7 +124,22 @@ const AddRepair: React.FC = () => {
         }
       );
 
+       // Uzupełnianie brakujących danych
+    if (repairResponse.data && repairResponse.data.id) {
+      const newRepair = {
+        id: repairResponse.data.id,
+        vehicleId: data.vehicleId,
+        description: data.description,
+        price: data.price,
+        status: "IN_PROGRESS"
+      };
+      setRepairs(previousRepairs => [...previousRepairs, newRepair]);
+    } else {
+      console.error("Niepełne dane w odpowiedzi serwera");
+    }
+
       const repairId = repairResponse.data.id;
+      
 
       const formData = new FormData();
       formData.append("photo", data.photo[0]);
@@ -130,10 +159,41 @@ const AddRepair: React.FC = () => {
       reset();
 
       fetchRepairPhotos(repairId);
+      reset();
     } catch (error) {
       console.error("Error occurred while adding repair:", error);
     }
   };
+  const handleSaveChanges = async (repairId: number) => {
+    if (!editedRepair) return;
+    
+    try {
+      const response = await axios.post(
+        `https://api.bazydanych.fun/v1/repairs/${repairId}/status`,
+        {
+          status: editedRepair.status,
+        },
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+      );
+
+      if (response.status === 200) {
+        console.log("Status naprawy został pomyślnie zaktualizowany");
+        setRepairs((prevRepairs) =>
+          prevRepairs.map((repair) =>
+          repair.id === repairId ? { ...repair, status: editedRepair.status } : repair
+          )
+        );
+        setEditingRepairId(null);
+        setEditedRepair(null);
+  
+      } else {
+        setError(`Błąd podczas zapisywania zmian: Kod błędu ${response.status}`);
+      }
+    } catch (error) {
+      setError("Błąd podczas zapisywania zmian");
+    }
+  };
+
 
   const openDialog = (repairId: number) => {
     setSelectedRepairId(repairId);
@@ -333,13 +393,47 @@ const AddRepair: React.FC = () => {
           <h2 className="text-xl font-semibold mb-2">Istniejące naprawy</h2>
           <div className="max-h-40 overflow-y-auto">
             <ul className="divide-y divide-gray-500">
-              {repairs.map((repair) => (
-                <li key={repair.id} className="py-2">
-                  <p>
-                    Vehicle ID: {repair.vehicleId}, Description:{" "}
-                    {repair.description}, Price: {repair.price}
-                  </p>
-                  <div className="flex justify-center mt-2">
+            {repairs.map((repair) => (
+              <li key={repair.id} className="py-2">
+                {editingRepairId === repair.id ? (
+                  <div className="flex flex-col items-center mb-4">
+                    <div className="flex items-center space-x-4">
+                      <select
+                        value={editedRepair?.status || repair.status}
+                        onChange={(e) => setEditedRepair({ ...repair, status: e.target.value })}
+                        className="p-2 border border-gray-600 rounded bg-gray-700 text-white"
+                      >
+                        <option value="IN_PROGRESS">W trakcie</option>
+                        <option value="FINISHED">Zakończono</option>
+                        <option value="CANCELED">Anulowano</option>
+                      </select>
+                    </div>
+                    <div className="flex space-x-2 mt-2">
+                      <button
+                        onClick={() => handleSaveChanges(repair.id)}
+                        className="bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 rounded"
+                      >
+                        Zapisz
+                      </button>
+                      <button
+                        onClick={() => { setEditingRepairId(null); setEditedRepair(null); }}
+                        className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                      >
+                        Anuluj
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <p>ID Pojazdu: {repair.vehicleId}, Opis: {repair.description}, Cena: {repair.price} zł, Status: {translateStatus(repair.status)}</p>
+                    <div className="flex justify-center mt-2">
+                      <button
+                        onClick={() => { setEditingRepairId(repair.id); setEditedRepair(repair); }}
+                        className="bg-yellow-600 hover:bg-yellow-800 text-white font-bold py-2 px-4 rounded mr-2"
+                      >
+                        Edytuj Status
+                      </button>
+
                     <button
                       className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded mr-2"
                       onClick={() => fetchRepairPhotos(repair.id)}
@@ -417,11 +511,13 @@ const AddRepair: React.FC = () => {
                       Dodaj zdjęcie
                     </button>
                   </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+                </div>
+              )}
+              </li>
+            ))}
+          </ul>
         </div>
+      </div>
         {repairPhotos.length > 0 && (
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
