@@ -4,11 +4,13 @@ import bazydanych.module.*
 import bazydanych.plugins.*
 import bazydanych.repository.postgres.*
 import bazydanych.service.*
+import bazydanych.util.StopwatchListener
 import io.ktor.server.application.*
 import kotlinx.coroutines.runBlocking
 import org.jooq.SQLDialect
 import org.jooq.impl.DSL
 import org.jooq.impl.DefaultConfiguration
+import org.jooq.impl.DefaultExecuteListenerProvider
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
@@ -19,6 +21,7 @@ fun Application.publicApi() {
     val jooqConfig = DefaultConfiguration().apply {
         set(database)
         set(SQLDialect.POSTGRES)
+        set(DefaultExecuteListenerProvider(StopwatchListener()))
     }
 
     val jooq = DSL.using(jooqConfig)

@@ -1,0 +1,355 @@
+KALENDARZ (CALENDAR):
+
+POST /v1/calendar
+
+TWORZY KALENDARZ
+
+{   id: Int,
+    userId: Int,
+    vehicleId: Int,
+    defect: String,
+    datetime: LocalDateTime,
+    status: String
+}
+
+TWORZYU KALENARZ, ZWARACA JEGO ID
+
+
+
+PUT /v1/calendar/{id}
+
+AKTUALIZUJE KALENDARZ
+
+{   id: Int,
+    userId: Int,
+    vehicleId: Int,
+    defect: String,
+    datetime: LocalDateTime,
+    status: String
+}
+
+AKTUALIZUJE KALENARZ, ZWARACA JEGO ID
+
+
+
+DELETE /v1/calendar/{id}
+
+USUWA KALENDARZ
+
+NIC NIE ZWRACA
+
+
+
+GET /v1/calendar/{id}
+
+ZWRACA INFO O KALENDARZU
+
+
+
+GET /v1/calendar
+
+ZWRACA WSZYSTKIE KALENDARZE
+
+
+GET /vi/calendar/user/{userId}
+
+ZWRACA KALENDARZ DLA DANEGO UŻYTKOWNIKA
+
+--------------------------------------------
+
+
+ZAMÓWIENIA (ORDERS):
+
+POST /v1/user/{user-id}/orders
+
+TWORZY ZAMÓWIENIE
+
+{     
+     ownerId: UserId,
+     partsId: Int,
+     status: String,
+}
+
+ZWRACA ID UTWORZONEGO ZAMÓWIENIA
+
+
+
+GET /v1/user/{user-id}/orders
+
+ZWRACA LISTE ZAMÓWIEŃ UŻYTKOWNIKA
+
+
+
+GET /v1/user/{user-id}/orders/{id}
+
+ZWRACA INFORMACJE NA TEMAT DANEGO ZAMÓWIENIA
+
+
+
+DELETE /v1/user/{user-id}/orders/{id}
+
+USUWA ZAMÓWIENIE
+
+
+--------------------------------------------
+
+
+CZĘŚCI (PARTS):
+
+POST /v1/parts
+
+TWORZY CZĘŚĆ
+
+{
+    vehicleId: Int,
+    productName: String,
+    price: BigDecimal,
+    image: String
+}
+
+ZWRACA ID UTWORZONEJ CZĘŚCI
+
+
+
+POST /v1/parts/{partsId}/photos
+
+DODAJE ZDJĘCIE DO ISTNIEJĄCEJ CZĘŚCI
+
+TRZEBA DAĆ ZDJĘCIE W MULTIPARCIE/CZYMŚ INNY NWM
+
+ZWRACA ID ZDJĘCIA
+
+
+
+GET /v1/parts/{partsId}
+
+ZWRACA DETALE NA TEMAT DANEJ CZĘŚCI
+
+
+--------------------------------------------
+
+
+CENY (PRICES):
+
+POST /v1/price
+
+TWORZY CENĘ
+
+{
+    name: String,
+    description: String,
+    price: BigDecimal
+}
+
+ZWRACA ID UTWORZONEJ CENY
+
+
+
+DELETE /v1/price/{id}
+
+USUWA CENĘ
+
+NIC NIE ZWRACA
+
+
+
+PUT /v1/price/{id}
+
+AKTUALIZUJE CENĘ
+
+{
+    name: String,
+    description: String,
+    price: BigDecimal
+}
+
+ZWRACA ID ZAKTUALIZOWANEJ CENY
+
+
+
+GET /v1/price
+
+ZWRACA WSZYSTKIE CENY
+
+
+
+GET /v1/price/{id}
+
+ZWRACA DETALE NA TEMAT DANEJ CENY
+
+
+------------------------------------
+
+
+NAPRAWY (REPAIRS):
+
+POST /v1/repairs
+
+TWORZY NAPRAWĘ
+
+{
+    vehicleId: Int,
+    description: String,
+    price: BigDecimal
+}
+
+ZWRACA ID UTWORZONEJ NAPRAWY
+
+
+
+POST /v1/repairs/{repairId}/photos
+
+DODAJE ZDJĘCIE DO ISTNIEJĄCEJ NAPRAWY
+
+TRZEBA DAĆ ZDJĘCIE W MULTIPARCIE/CZYMŚ INNY NWM
+
+ZWRACA ID ZDJĘCIA
+
+
+
+POST /v1/repairs/{repairId}/status
+
+AKTUALIZUJE STATUS NAPRAW
+
+
+
+GET /v1/repairs
+
+ZWRACA WSZYSTKIE NAPRAWY
+
+
+
+GET /v1/repairs/{vehicleId
+
+ZWRACA WSZYSTKIE NAPRAWY DLA DANEGO POJAZDU
+
+
+
+
+GET /v1/repairs/{vehicleId}/repair-status
+
+ZWRACA STATUS NAPRAWY DLA DANEGO POJAZDU
+
+
+
+GET /v1/repairs/{repairId}/photos
+
+ZWRACA ID ZDJĘĆ DLA DANEGO ID NAPRAWY
+
+
+
+DELETE /v1/repairs/{repairId}
+
+USUWA NAPRAWE WRAZ Z ZDJĘCIEM
+
+NIC NIE ZWRACA
+
+
+
+DELETE /v1/repairs/{repairId}/photos/{photoId}
+
+USUWA ZDJĘCIE Z NAPRAWY
+
+NIC NIE ZWRACA
+
+
+---------------------------------------------
+
+
+
+UŻYTKOWNICY (USERS):
+
+POST /v1/user
+
+TWORZY UŻYTKOWNIKA
+
+{
+    "name": "String",
+    "surname": "String",
+    "phoneNumber": "String",
+    "login": "String",
+    "password": "String",
+    "role": "UserRole"
+}
+
+ZWRACA ID UTWORZONEGO UŻYTKOWNIKA, LOGIN I HASŁO
+
+
+
+DELETE /v1/user/{id}
+
+USUWA UŻYTKOWNIKA
+
+NIC NIE ZWRACA
+
+
+
+GET /v1/user/{id}
+
+ZWRACA INFORMACJE O UŻYTKOWNIKU
+
+
+
+GET /v1/user/names
+
+ZWRACA LISTĘ WSZYSTKICH UŻYTKOWNIKÓW WRAZ Z ICH ID
+
+
+
+GET /v1/user/me
+
+ZWRACA INFORMACJE O ZALOGOWANYM UŻYTKOWNIKU
+
+
+
+POST /v1/user/login
+
+LOGUJE UŻYTKOWNIKA
+
+{
+    login: String,
+    password: String
+}
+
+ZWRACA TOKEN JWT
+
+
+------------------------------
+
+
+POJAZDY (VEHICLES):
+
+POST /v1/user/{userId}/vehicles
+
+TWORZY POJAZD
+
+{
+    "ownerId": "UserId",
+    "brand": "String",
+    "model": "String",
+    "yearOfProduction": "Int",
+    "vin": "String",
+    "licensePlate": "String"
+}
+
+ZWRACA ID UTWORZONEGO POJAZDU
+
+
+
+GET /v1/user/{userId}/vehicles
+
+ZWRACA LISTĘ POJAZDÓW UŻYTKOWNIKA
+
+
+
+GET /v1/user/{userId}/vehicles/{id}
+
+ZWRACA INFORMACJE NA TEMAT DANEGO POJAZDU
+
+
+
+DELETE /v1/user/{userId}/vehicles/{id}
+
+USUWA POJAZD
+
+NIC NIE ZWRACA

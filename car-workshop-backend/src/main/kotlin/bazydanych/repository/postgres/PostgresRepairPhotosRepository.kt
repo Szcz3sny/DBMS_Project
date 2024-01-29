@@ -29,6 +29,10 @@ class PostgresRepairPhotosRepository(
             } ?: throw IllegalStateException("No result data returned")
     }
 
+    override suspend fun deletePhotosByRepairId(repairId: RepairId): Boolean = withContext(Dispatchers.IO) {
+        jooq.deleteFrom(RepairPhotosTable.TABLE).where(RepairPhotosTable.REPAIR_ID.eq(repairId.value)).execute() > 0
+    }
+
     override suspend fun findRepairPhotoById(id: RepairPhotoId): RepairPhoto? = withContext(Dispatchers.IO) {
         jooq.selectFrom(RepairPhotosTable.TABLE.where(RepairPhotosTable.ID.eq(id.value))).fetchOne { parse(it) }
     }

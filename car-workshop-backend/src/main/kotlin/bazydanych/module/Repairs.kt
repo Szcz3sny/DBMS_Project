@@ -3,6 +3,8 @@ package bazydanych.module
 import bazydanych.model.repair.RepairId
 import bazydanych.model.repair.RepairPhotoId
 import bazydanych.model.user.UserRole
+import bazydanych.model.VehicleId
+import bazydanych.model.repair.RepairStatus
 import bazydanych.plugins.JWTUserPrincipal
 import bazydanych.service.RepairsService
 import bazydanych.service.form.RepairCreateForm
@@ -46,8 +48,7 @@ fun Application.repairsModule(
                         return@post
                     }
 
-                    val vehicleOwner = repairsService.findVehicleOwnerByRepairId(RepairId(repairId))
-                    if (principal.user.role == UserRole.GUEST || vehicleOwner == null || principal.user.id != vehicleOwner) { // todo separate to extension/service
+                    if (principal.user.role == UserRole.GUEST) {
                         call.respond(HttpStatusCode.Forbidden)
                         return@post
                     }
@@ -69,6 +70,43 @@ fun Application.repairsModule(
                     }
                 }
 
+
+                post("/{repairId}/status") {
+                    val principal: JWTUserPrincipal =
+                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
+
+                    val repairId = call.parameters["repairId"]?.toIntOrNull() ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@post
+                    }
+
+                    if (principal.user.role == UserRole.GUEST) {
+                        call.respond(HttpStatusCode.Forbidden)
+                        return@post
+                    }
+
+                    val status = call.receive<RepairStatusUpdate>()
+                    val success = repairsService.updateRepairStatus(RepairId(repairId), status.status)
+                    if (success) {
+                        call.respond(HttpStatusCode.OK)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Repair not found")
+                    }
+                }
+
+                get("/{vehicleId}/repair-status") {
+                    val vehicleId = call.parameters["vehicleId"]?.toIntOrNull() ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@get
+                    }
+
+                    val repairStatus = repairsService.getRepairStatusByVehicleId(VehicleId(vehicleId)) ?: run {
+                        call.respond(HttpStatusCode.NotFound, "Repair status not found")
+                        return@get
+                    }
+
+                    call.respond(mapOf("repairStatus" to repairStatus))
+                }
                 get("/{repairId}/photos") {
                     val principal: JWTUserPrincipal =
                         call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
@@ -80,12 +118,33 @@ fun Application.repairsModule(
 
                     val vehicleOwner = repairsService.findVehicleOwnerByRepairId(RepairId(repairId))
 
-                    if (principal.user.role == UserRole.GUEST || vehicleOwner == null || principal.user.id != vehicleOwner) {
+                    if (principal.user.role == UserRole.GUEST && (vehicleOwner == null || principal.user.id != vehicleOwner)) {
                         call.respond(HttpStatusCode.Forbidden)
                         return@get
                     }
 
                     call.respond(repairsService.findRepairPhotosIdsByRepairId(RepairId(repairId)))
+                }
+
+                get {
+                    val principal: JWTUserPrincipal =
+                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
+
+                    val repairs = repairsService.findAllRepairs()
+                    call.respond(repairs)
+                }
+
+                get("/{vehicleId}") {
+                    val principal: JWTUserPrincipal =
+                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
+
+                    val vehicleId = call.parameters["vehicleId"]?.toIntOrNull() ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@get
+                    }
+
+                    val repairs = repairsService.findAllRepairsByVehicleId(VehicleId(vehicleId))
+                    call.respond(repairs)
                 }
 
                 delete("/{repairId}/photos/{photoId}") {
@@ -97,14 +156,43 @@ fun Application.repairsModule(
                         return@delete
                     }
 
-                    val vehicleOwner = repairsService.findVehicleOwnerByRepairId(RepairId(repairId))
-                    if (principal.user.role == UserRole.GUEST || vehicleOwner == null || principal.user.id != vehicleOwner) {
+                    val photoId = call.parameters["photoId"]?.toIntOrNull() ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@delete
+                    }
+
+                    if (principal.user.role == UserRole.GUEST) {
                         call.respond(HttpStatusCode.Forbidden)
                         return@delete
                     }
 
-                    repairsService.deleteRepairPhoto(RepairPhotoId(repairId))
+                    val success = repairsService.deleteRepairPhoto(RepairPhotoId(photoId))
+                    if (success) {
+                        call.respond(HttpStatusCode.OK)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Repair photo not found")
+                    }
                 }
+
+                delete("/{repairId}") {
+                    val principal: JWTUserPrincipal =
+                        call.principal<JWTUserPrincipal>() ?: throw Exception("No principal")
+
+                    val repairId = call.parameters["repairId"]?.toIntOrNull() ?: run {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@delete
+                    }
+
+                    val success = repairsService.deleteRepair(RepairId(repairId))
+                    if (success) {
+                        call.respond(HttpStatusCode.OK, "Repair deleted successfully")
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Repair not found")
+                    }
+                }
+
+
+
             }
         }
     }
@@ -112,3 +200,6 @@ fun Application.repairsModule(
 
 @Serializable
 class RepairAddResponse(val id: RepairId)
+
+@Serializable
+class RepairStatusUpdate(val status: RepairStatus)

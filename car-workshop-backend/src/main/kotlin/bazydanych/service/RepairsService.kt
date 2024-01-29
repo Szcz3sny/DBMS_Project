@@ -1,8 +1,11 @@
 package bazydanych.service
 
 import bazydanych.model.repair.RepairId
+import bazydanych.model.repair.Repair
 import bazydanych.model.repair.RepairPhotoId
 import bazydanych.model.user.UserId
+import bazydanych.model.VehicleId
+import bazydanych.model.repair.RepairStatus
 import bazydanych.repository.RepairCreateDetails
 import bazydanych.repository.RepairPhotosRepository
 import bazydanych.repository.RepairsRepository
@@ -26,19 +29,40 @@ class RepairsService(
 
         return repairsRepository.insert(details)
     }
+    suspend fun findAllRepairs(): List<Repair> {
+        return repairsRepository.findAllRepairs()
+    }
 
-    suspend fun addRepairPhoto(repairId: RepairId, fileStream: InputStream) : RepairPhotoId {
+    suspend fun addRepairPhoto(repairId: RepairId, fileStream: InputStream): RepairPhotoId {
         val imageUrl = fileStorageService.uploadImage(fileStream)
         return repairPhotosRepository.insert(repairId, imageUrl)
+    }
+
+    suspend fun findAllRepairsByVehicleId(vehicleId: VehicleId): List<Repair> {
+        return repairsRepository.findAllRepairsByVehicleId(vehicleId)
+    }
+
+    suspend fun getRepairStatusByVehicleId(vehicleId: VehicleId): List<String> {
+        return repairsRepository.getRepairStatusByVehicleId(vehicleId)
+    }
+
+    suspend fun updateRepairStatus(repairId: RepairId, status: RepairStatus): Boolean {
+        return repairsRepository.updateStatus(repairId, status)
     }
 
     suspend fun deleteRepairPhoto(id: RepairPhotoId): Boolean {
         return repairPhotosRepository.deleteRepairPhoto(id)
     }
 
+    suspend fun deleteRepair(repairId: RepairId): Boolean {
+        repairPhotosRepository.deletePhotosByRepairId(repairId)
+        return repairsRepository.deleteRepair(repairId)
+    }
+
     suspend fun findVehicleOwnerByRepairId(repairId: RepairId): UserId? {
         return repairsRepository.findVehicleOwnerByRepairId(repairId)
     }
+
     suspend fun findRepairPhotosIdsByRepairId(repairId: RepairId): List<RepairPhotoView> {
         return repairPhotosRepository.findRepairPhotosByRepairId(repairId).map { it.toDto() }
     }
